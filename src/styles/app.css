@@ -192,28 +192,6 @@ svg.avatar { display: inline-block; width: 1.6em; height: 1.6em; vertical-align:
 .home-total { font-size: .92rem; font-weight: 700; color: var(--text-secondary); }
 
 .home-halls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.home-stage {
-  --stage: #8b5cf6;
-  margin-bottom: 16px; padding: 14px; border-radius: var(--radius-lg, 24px);
-  border: 2px dashed color-mix(in srgb, var(--stage) 35%, white);
-  background: color-mix(in srgb, var(--stage) 5%, white);
-}
-.home-stage.is-play, .play-stage.is-play { --stage: #f59e0b; }
-.home-stage.is-explore, .play-stage.is-explore { --stage: #3b82f6; }
-.home-stage.is-challenge, .play-stage.is-challenge { --stage: #ec4899; }
-.home-stage-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
-.home-stage-head h3 { margin: 0; font-size: 1.18rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
-.home-stage-head h3 small { font: 700 .76rem var(--mono); letter-spacing: .08em; color: color-mix(in srgb, var(--stage) 70%, #3c2f1e); text-transform: uppercase; }
-.home-stage-head p { margin: 3px 0 0; color: var(--text-secondary); font-size: .92rem; line-height: 1.55; }
-.home-stage-step {
-  flex: none; display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
-  background: var(--stage, #8b5cf6); color: #fff; font: 800 1rem var(--mono); box-shadow: var(--shadow-sm);
-}
-.play-stage { --stage: #8b5cf6; margin-top: 26px; }
-.play-stage-title { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0 0 4px; font-size: 1.3rem; }
-.play-stage-title small { flex-basis: 100%; padding-left: 44px; font-size: .84rem; color: var(--text-secondary); font-weight: 700; }
-.play-group h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 16px 0 10px; font-size: 1.08rem; }
-.play-group h3 small { font-size: .82rem; color: var(--text-secondary); font-weight: 700; }
 .hall-card {
   display: grid; grid-template-rows: auto auto 1fr auto; gap: 4px; min-height: 186px; padding: 16px 14px;
   border-radius: var(--radius-md);
@@ -488,8 +466,6 @@ svg.avatar { display: inline-block; width: 1.6em; height: 1.6em; vertical-align:
   .page-back { justify-self: start; font-size: .84rem; padding: 6px 10px; }
   .home-halls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hall-card { min-height: 0; }
-  .home-stage { padding: 10px; }
-  .play-stage-title small { padding-left: 0; }
   .play-cards, .home-more { grid-template-columns: minmax(0, 1fr); }
   .show { padding: 12px 12px 10px; border-radius: var(--radius-md); }
   .show-stage { padding: 6px 6px 4px; border-radius: 18px; }

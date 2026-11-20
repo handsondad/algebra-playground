@@ -1,4 +1,4 @@
-import { fmt, intersect, laserHits, laserLevels, linearText, lineY, pt } from '../algebra.js';
+import { fmt, intersect, laserHits, laserLevels, linearText, lineY, proportionCheck, proportionLevels, pt } from '../algebra.js';
 import { button, circle, line, metric, onAction, plane, polyline, setSlider, slider, sliderValue, text } from '../board.js';
 
 /* ───────── 激光救援 ───────── */
@@ -102,5 +102,82 @@ export function twoLines({ board, controls, stats, signal }) {
     setSlider(controls, 'tl-m2', m2); setSlider(controls, 'tl-b2', b2);
     draw();
     board.animate('.line-a, .line-b, .fade-in');
+  };
+}
+
+/* ───────── 正比例柠檬水配比：y = kx ───────── */
+function pitcherSvg(x, yBot, w, maxH, lemons, cups, title, cls) {
+  const fillH = Math.min(maxH - 12, Math.max(22, ((lemons + cups) / 16) * (maxH - 16)));
+  const yFill = yBot - fillH;
+  return `<g class="fade-in">
+    <rect x="${x}" y="${yBot - maxH}" width="${w}" height="${maxH}" rx="12" class="mix-jar"/>
+    <rect x="${x + 4}" y="${yFill}" width="${w - 8}" height="${fillH - 4}" rx="8" class="mix-liquid ${cls}"/>
+    ${text(pt(x + w / 2, yBot - maxH - 12), title, 'stair-label')}
+    ${text(pt(x + w / 2, yBot - 28), `🍋 ${lemons}`, 'mix-item')}
+    ${text(pt(x + w / 2, yBot - 8), `💧 ${cups}`, 'mix-item')}
+    <path d="M${x + w} ${yBot - maxH + 26} Q${x + w + 18} ${yBot - maxH + 26} ${x + w + 18} ${yBot - maxH + 54} Q${x + w + 18} ${yBot - maxH + 80} ${x + w} ${yBot - maxH + 80}" class="mix-handle"/>
+  </g>`;
+}
+
+export function proportionMix({ board, controls, stats, notify, signal }) {
+  const P = plane({ xmin: 0, xmax: 8, ymin: 0, ymax: 12, equal: false, box: [306, 34, 614, 356] });
+  let level = 0;
+
+  function renderControls(lemons = 1, cups = 1) {
+    const lv = proportionLevels[level];
+    controls.innerHTML = `<div class="control-row" role="group" aria-label="选配方">${proportionLevels
+      .map((_, i) => button(`配方 ${i + 1}`, 'level', `data-level="${i}" aria-pressed="${i === level}"`)).join('')}</div>` +
+      slider('小念大壶里放几颗柠檬：x', 'pm-x', lemons, 1, 8) +
+      slider('小念大壶里倒几杯水：y', 'pm-y', cups, 1, 12) +
+      `<p class="lab-note">「${lv.name}」标准杯是 <b>${lv.targetLemons} 颗柠檬配 ${lv.targetCups} 杯水</b>。派对要用 <b>${lv.askLemons} 颗柠檬</b>，该倒几杯水味道才一模一样？</p>`;
+  }
+
+  function draw() {
+    const lv = proportionLevels[level];
+    const x = sliderValue(controls, 'pm-x'), y = sliderValue(controls, 'pm-y');
+    const st = proportionCheck(lv, x, y);
+    const k = lv.targetCups / lv.targetLemons;
+
+    let out = '';
+    const userCls = st.sameRatio ? 'is-match' : st.taste.includes('酸') ? 'is-sour' : 'is-light';
+    out += pitcherSvg(34, 248, 94, 152, lv.targetLemons, lv.targetCups, '爸爸标准杯', 'is-match');
+    out += pitcherSvg(156, 248, 102, 166, x, y, '小念派对壶', userCls);
+
+    out += text(pt(148, 290),
+      st.partySolved ? `🎉 派对大壶调好啦：${x} 颗配 ${y} 杯！`
+        : st.sameRatio ? `✔ 味道一样！再试试放 ${lv.askLemons} 颗柠檬` : `现在尝起来：${st.taste}`,
+      st.sameRatio ? 'mix-verdict is-win' : 'mix-verdict');
+    out += text(pt(148, 324), `正比例：y = ${fmt(k)}x（过原点 0,0）`, 'mix-eq');
+    out += text(pt(148, 354), `标准每颗配 ${fmt(st.unitCups)} 杯 · 你配 ${fmt(st.userUnitCups)} 杯`, 'tile-note');
+
+    out += P.grid({ every: 1, label: 2, everyY: 2, labelY: 4, xName: '柠檬', yName: '水' });
+    out += P.curve(v => k * v, 'line-a');
+    const pStd = P.px(pt(lv.targetLemons, lv.targetCups));
+    const pUser = P.px(pt(x, y));
+    out += circle(P.px(pt(0, 0)), 5, 'mix-origin');
+    out += circle(pStd, 7, 'mix-dot is-std') + text(pt(pStd.x + 10, pStd.y - 10), '标准', 'plane-tick');
+    out += `<g class="fade-in">${circle(pUser, 8.5, st.sameRatio ? 'line-meet' : 'budget-dot is-bad')}</g>`;
+    out += text(pt(Math.min(pUser.x + 10, 566), Math.max(pUser.y + 18, 52)), `(${x}, ${y})`, 'line-meet-label');
+
+    board.draw(out);
+    stats.innerHTML = metric('标准比（水÷柠檬）', fmt(st.unitCups)) +
+      metric('你的比（水÷柠檬）', fmt(st.userUnitCups)) +
+      metric('口味判定', st.partySolved ? '派对过关 🎉' : st.taste);
+    notify(st.partySolved ? `🎉 调对啦！${x} 颗柠檬配 ${y} 杯水，刚好落在正比例直线 y = ${fmt(k)}x 上！` : '');
+  }
+
+  function reset(index, lemons = 1, cups = 1) {
+    level = index;
+    renderControls(lemons, cups);
+    draw();
+  }
+
+  onAction(controls, { level: btn => reset(Number(btn.dataset.level), 1, 1) }, signal);
+  controls.addEventListener('input', draw, { signal });
+  reset(0, 1, 1);
+
+  return (index = 0, lemons = 1, cups = 1) => {
+    reset(index, lemons, cups);
+    board.animate('.line-a, .fade-in');
   };
 }

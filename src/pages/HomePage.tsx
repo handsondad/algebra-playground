@@ -4,12 +4,12 @@ import { hallHooks } from "../question-catalog.js";
 import { SoundToggle } from "../components/PageTop";
 import { TopicCard } from "../components/TopicCard";
 import { HomeShowcase } from "../components/HomeShowcase";
-import { halls, stages, themeOf, topics } from "../lib/catalog";
+import { halls, themeOf, topics } from "../lib/catalog";
 import { useProgress } from "../lib/progress";
 import { href } from "../lib/route";
 
 const hooks = hallHooks as Record<string, string>;
-const quickWords = ["天平", "瓷砖", "激光", "弹珠"];
+const quickWords = ["天平", "鸡兔", "杨辉", "斐波那契", "不等式", "二进制"];
 
 export function HomePage() {
   const { lit, heard } = useProgress();
@@ -65,37 +65,23 @@ export function HomePage() {
 
       <section aria-labelledby="home-halls">
         <div className="home-section-head">
-          <h2 id="home-halls" className="home-section-title">三步走：玩 → 试 → 闯</h2>
+          <h2 id="home-halls" className="home-section-title">六座代数展馆</h2>
           <span className="home-total">共 {topics.length} 个问题 · ⭐ 看过 {heard.size}</span>
         </div>
-        {stages.map((stage, index) => {
-          const group = halls.filter((hall) => hall.stage === stage.id);
-          return (
-            <div key={stage.id} className={`home-stage is-${stage.id}`}>
-              <header className="home-stage-head">
-                <span className="home-stage-step" aria-hidden="true">{index + 1}</span>
-                <div>
-                  <h3><span aria-hidden="true">{stage.emoji}</span> {stage.name} <small>{stage.en}</small></h3>
-                  <p>{stage.summary}</p>
-                </div>
-              </header>
-              <div className="home-halls">
-                {group.map((hall) => {
-                  const theme = themeOf(hall.id);
-                  const seen = hall.lessons.filter((lesson) => heard.has(lesson.id)).length;
-                  return (
-                    <a key={hall.id} className="hall-card" href={href.hall(hall.id)} style={{ "--bubble": theme.hex } as CSSProperties}>
-                      <span className="hall-emoji" aria-hidden="true">{theme.emoji}</span>
-                      <strong>{hall.name}</strong>
-                      <small>{hooks[hall.id]}</small>
-                      <span className="hall-count">{hall.lessons.length} 个问题{seen ? ` · ⭐ 看过 ${seen}` : ""} →</span>
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
+        <div className="home-halls">
+          {halls.map((hall) => {
+            const theme = themeOf(hall.id);
+            const seen = hall.lessons.filter((lesson) => heard.has(lesson.id)).length;
+            return (
+              <a key={hall.id} className="hall-card" href={href.hall(hall.id)} style={{ "--bubble": theme.hex } as CSSProperties}>
+                <span className="hall-emoji" aria-hidden="true">{theme.emoji}</span>
+                <strong>{hall.name}</strong>
+                <small>{hooks[hall.id]}</small>
+                <span className="hall-count">{hall.lessons.length} 个问题{seen ? ` · ⭐ 看过 ${seen}` : ""} →</span>
+              </a>
+            );
+          })}
+        </div>
       </section>
 
       <section aria-labelledby="home-more">

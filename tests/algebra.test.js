@@ -1,10 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  applyScaleOp, balloonLevels, cardRounds, cardTable, cardValue, factorLevels, factorPairs, factorTry, intersect,
-  khwarizmiRoot, laserHits, laserLevels, machineLevels, machineOut, marbleLevels, marbleRun, matchCount, matchSticks,
-  mobilePuzzles, mobileSolutions, patternKinds, ruleFromPairs, ruleMatches, sameFunction, scaleLevels, scaleSolution,
-  solveSteps, staircaseSum, trackFn, trickSteps, trickValue,
+  applyIneqOp, applyScaleOp, balloonLevels, binomialText, bounceHeight, bounceSeries, budgetFeasiblePoints,
+  budgetLevels, budgetPolygon, cageCheck, cageLevels, cardRounds, cardTable, cardValue, chessboardCount, diffSquares,
+  dotsPolyText, dotsValue, explodeAll, factorLevels, factorPairs, factorTry, fibNumbers, fibSquares, firstBounceBelow,
+  gnomonCells, growthCompare, halvingPieces, ineqLevels, ineqRay, ineqSolved, intersect, khwarizmiRoot, laserHits,
+  laserLevels, leverLevels, leverStatus, machineLevels, machineOut, marbleLevels, marbleRun, matchCount, matchSticks,
+  mobilePuzzles, mobileSolutions, oddSum, oddTerm, patternKinds, PHI, proportionCheck, proportionLevels, radarCheck,
+  radarLevels, ruleFromPairs, ruleMatches, sameFunction, scaleLevels, scaleSolution, solveCage, solveIneqSteps,
+  solveSteps, staircaseSum, trackFn, trickSteps, trickValue, yanghuiRowSum, yanghuiRows,
 } from '../src/algebra.js';
 
 const onGrid = (v, min, max, step) => v >= min && v <= max && Math.abs(v / step - Math.round(v / step)) < 1e-9;
@@ -108,3 +112,117 @@ test('卡片配对：每列都是同一组函数，函数各不相同，表格�
     assert.equal(new Set(round.fns.map(f => JSON.stringify(cardTable(f)))).size, round.fns.length, round.name);
   }
 });
+
+test('鸡兔同笼：每关答案唯一，抬脚法留下的脚等于兔子数的两倍，默认 1 只兔不过关', () => {
+  for (const lv of cageLevels) {
+    const solved = solveCage(lv.heads, lv.legs);
+    assert.deepEqual({ chickens: solved.chickens, rabbits: solved.rabbits }, lv.solution, lv.name);
+    assert.equal(solved.remainingLegs, 2 * lv.solution.rabbits, lv.name);
+    assert.equal(cageCheck(lv.heads, lv.legs, lv.solution.rabbits, true).solved, true, lv.name);
+    assert.equal(cageCheck(lv.heads, lv.legs, 1, false).solved, false, `${lv.name} 默认值`);
+  }
+});
+
+test('阿基米德跷跷板：每关在 1..8 上只有唯一平衡格点，默认第 1 格不平衡', () => {
+  for (const lv of leverLevels) {
+    const winners = [1, 2, 3, 4, 5, 6, 7, 8].filter(d => leverStatus(lv, d).balanced);
+    assert.deepEqual(winners, [lv.solution], lv.name);
+    assert.equal(leverStatus(lv, 1).balanced, false, `${lv.name} 默认第 1 格`);
+  }
+});
+
+test('平方差割补与杨辉三角展开式', () => {
+  for (let a = 3; a <= 9; a += 1) {
+    for (let b = 1; b < a; b += 1) {
+      const r = diffSquares(a, b);
+      assert.equal(r.equal, true);
+      assert.equal(r.area, (a + b) * (a - b));
+    }
+  }
+  const rows = yanghuiRows(6);
+  assert.deepEqual(rows[4], [1, 4, 6, 4, 1]);
+  for (let n = 0; n <= 6; n += 1) assert.equal(yanghuiRowSum(n), 2 ** n);
+  assert.equal(binomialText(3), 'a³ + 3a²b + 3ab² + b³');
+});
+
+test('数轴不等式：乘负数翻号，标准步骤都能把系数化成 x', () => {
+  for (const lv of ineqLevels) {
+    const steps = solveIneqSteps(lv.state);
+    const last = steps.at(-1).state;
+    assert.ok(ineqSolved(last), lv.name);
+    const ray = ineqRay(last);
+    assert.equal(ray.op, lv.solution.op, lv.name);
+    assert.equal(ray.bound, lv.solution.bound, lv.name);
+  }
+  const flipped = applyIneqOp({ a: -2, b: 0, op: '<=', c: 6 }, { kind: 'negate' });
+  assert.equal(flipped.op, '>=');
+});
+
+test('半平面探照灯：答案落在滑块格点上且全包宝石、全避地雷，默认配置不过关', () => {
+  const start = { m1: 1, b1: 0, dir1: 1, m2: -1, b2: 0, dir2: -1 };
+  for (const lv of radarLevels) {
+    const s = lv.solution;
+    assert.ok(onGrid(s.m1, -2, 2, 0.5) && onGrid(s.b1, -4, 4, 1), `${lv.name} 线1`);
+    assert.ok(onGrid(s.m2, -2, 2, 0.5) && onGrid(s.b2, -4, 4, 1), `${lv.name} 线2`);
+    assert.equal(radarCheck(lv, s).won, true, lv.name);
+    assert.equal(radarCheck(lv, start).won, false, `${lv.name} 默认`);
+  }
+});
+
+test('零花钱采购计划：可行域非空，最优整数解唯一且落在答案顶点上', () => {
+  for (const lv of budgetLevels) {
+    const pts = budgetFeasiblePoints(lv);
+    assert.ok(pts.length >= 10 && budgetPolygon(lv).length >= 3, lv.name);
+    const best = Math.max(...pts.map(p => p.score));
+    assert.equal(best, lv.solution.best, lv.name);
+    const winners = pts.filter(p => p.score === best);
+    assert.equal(winners.length, 1, `${lv.name} 最优解唯一`);
+    assert.equal(winners[0].x, lv.solution.x);
+    assert.equal(winners[0].y, lv.solution.y);
+  }
+});
+
+test('奇数拐尺、斐波那契长方形与切半正方形无穷级数', () => {
+  for (let n = 1; n <= 8; n += 1) {
+    assert.equal(oddSum(n), n * n);
+    const cells = gnomonCells(n);
+    assert.equal(cells.filter(c => c.layer === n).length, oddTerm(n));
+    assert.equal(cells.filter(c => c.lowerTri).length, staircaseSum(n));
+  }
+  const fib = fibSquares(8);
+  const nums = fibNumbers(9);
+  const sumSquares = fib.nums.reduce((s, v) => s + v * v, 0);
+  assert.equal(sumSquares, fib.box.width * fib.box.height);
+  assert.equal(fib.box.width * fib.box.height, nums[7] * nums[8]);
+  assert.ok(Math.abs(fib.ratio - PHI) < 0.02);
+
+  const half = halvingPieces(6);
+  assert.equal(half.sumNumer, 63);
+  assert.equal(half.sumDenom, 64);
+  assert.ok(Math.abs(half.sumValue + half.remainder.area - 1) < 1e-12);
+});
+
+test('正比例柠檬水、棋盘麦粒、爆炸圆点机与弹跳小球衰减', () => {
+  for (const lv of proportionLevels) {
+    assert.equal(proportionCheck(lv, lv.askLemons, lv.solutionCups).partySolved, true, lv.name);
+    assert.equal(proportionCheck(lv, 1, 1).partySolved, false, `${lv.name} 默认`);
+  }
+  assert.equal(chessboardCount(1).grain, 1n);
+  assert.equal(chessboardCount(10).total, 1023n);
+  assert.equal(chessboardCount(64).total, (2n ** 64n) - 1n);
+  assert.equal(growthCompare(10).exponential, 512);
+
+  for (const base of [2, 3, 10]) {
+    for (const n of [0, 5, 13, 27]) {
+      const { boxes } = explodeAll(n, base, 6);
+      assert.equal(dotsValue(boxes, base), n, `base=${base} n=${n}`);
+      assert.ok(boxes.every(c => c < base), `base=${base} n=${n}`);
+    }
+  }
+  assert.equal(dotsPolyText(explodeAll(13, 2, 6).boxes), 'x³ + x² + 1');
+
+  assert.equal(bounceHeight(8, 0.5, 3), 1);
+  assert.equal(firstBounceBelow(8, 0.5, 1), 4);
+  assert.equal(bounceSeries(8, 0.5, 4).length, 5);
+});
+

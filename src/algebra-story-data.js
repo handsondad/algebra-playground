@@ -1,17 +1,17 @@
 // 全站「小念和爸爸」的对话：展馆导览、展馆里的追问，以及大师故事 + 家庭小实验。
 
 export const hallChats = {
-  mobiles: ['爸爸，不知道每个挂件多重，真的能猜出来吗？', '能！横杆平了，就说明两边一样重。一样的东西两边一起拿掉，剩下的就是线索。这其实就是解方程，只是还没写 x。'],
-  balance: ['天平和方程有什么关系呀？', '等号就像天平的支点：两边一样重它才平。两边同时加、同时减、同时平分，天平一直平，最后一边只剩一个 x，答案就出来了。'],
-  tiles: ['乘法怎么能拼出来？', '长方形的面积就是长乘宽。用大方块当 x²、长条当 x、小方块当 1，(x + 2)(x + 3) 就能实实在在拼出来，倒过来拼还能做因式分解。'],
-  machines: ['规律机器里到底藏着什么？', '藏着一条规则。多喂几个数、多搭几个图案，看看每次多了多少。规律找到了，就能把它写成一个式子，算第 100 个也不用一个个数。'],
-  lines: ['直线也能玩闯关吗？', '当然！y = mx + b 里只有两个旋钮：b 决定直线从 y 轴哪里出发，m 决定它有多陡。调准了，一道激光就能穿过所有目标。'],
-  curves: ['弯弯的曲线也能用式子管住吗？', '能。抛物线 y = a(x − h)² + k 有三个旋钮：h 左右挪，k 上下挪，a 管开口朝向和胖瘦。同一个函数，还能写成式子、画成图、列成表。'],
+  equations: ['爸爸，挂件、天平和方程有什么关系呀？', '它们都在比两边是不是一样重。等号就像天平的支点：两边同时加、同时减、同时平分，天平一直是平的。一步步让一边只剩一个未知数，另一边就是答案。'],
+  expressions: ['字母和数字混在一起，还能算吗？', '能！把 x 想成一个装着秘密数字的口袋，口袋和口袋能合并，弹珠和弹珠能合并。乘法还能拼成面积：用大方块、长条和小方块，展开、因式分解和配方都看得见。'],
+  patterns: ['一串数里的规律，怎么才能一下子看出来？', '先看每次多了多少。火柴图案每多一个正方形就多 3 根，第 n 个就是 1 + 3n 根。要把很多个数加起来，就像高斯那样，倒过来再拼一份。'],
+  functions: ['函数到底是什么呀？', '函数就是一条规则：放进一个 x，就吐出一个 y。把这些 x 和 y 画到坐标格子上就是图像：一次函数是直线，二次函数是抛物线。同一个函数，还能写成式子、列成表。'],
+  inequalities: ['爸爸，大于号和小于号也能像方程那样解吗？', '能！只是答案不再是一个孤零零的数，而是一整条射线或一片安全区。记住最关键的一条：两边同乘负数就像关于 0 照镜子，不等号一定要跟着掉头！'],
+  exponents: ['每次加 2 和每次乘 2，差得有那么远吗？', '开头几步差不多，走不了十步就天差地别啦！连乘就是乘方和指数：棋盘麦粒翻倍快得吓人，而「满 b 进 1」的爆炸圆点盒还能把二进制和多项式连成一家。'],
 };
 
 export const algebraWiki = [
   {
-    id: 'diophantus', hall: 'mobiles', emoji: '📜', era: '约公元 250 年 · 亚历山大', scientist: '丢番图',
+    id: 'diophantus', hall: 'equations', emoji: '📜', era: '约公元 250 年 · 亚历山大', scientist: '丢番图',
     title: '一块会出题的墓碑',
     story: '丢番图写了一本《算术》，是最早用简写符号表示未知数的人之一。传说他的墓碑上刻着一道题：他一生的六分之一是童年，又过了十二分之一长出胡子，再过七分之一结婚，五年后有了儿子，儿子只活到父亲寿命的一半，儿子去世四年后他也去世了。把这些拼起来，就能算出他活了 84 岁。',
     homeLab: '🏠 在家试试：用衣架、两个夹子和一把相同的硬币做一个挂件。让爸爸在一边藏几枚硬币、用纸包起来，你只看横杆平不平，猜出纸包里有几枚。',
@@ -19,7 +19,7 @@ export const algebraWiki = [
     source: ['MacTutor · Diophantus', 'https://mathshistory.st-andrews.ac.uk/Biographies/Diophantus/'],
   },
   {
-    id: 'viete', hall: 'mobiles', emoji: '🔤', era: '1591 年 · 法国', scientist: '韦达',
+    id: 'viete', hall: 'expressions', emoji: '🔤', era: '1591 年 · 法国', scientist: '韦达',
     title: '用字母代替数',
     story: '韦达是一位律师，也是国王的密码破译员。他想到一个好主意：用字母代表还不知道的数，也用字母代表已知的数。这样一道题就能写成一条对所有数都成立的式子，代数从此有了自己的语言。',
     homeLab: '🏠 在家试试：给家人表演读心魔术：想一个数，乘 2，加 10，除以 2，再减去想的数。答案总是 5。再用一个口袋代替那个数，画给他们看为什么。',
@@ -27,7 +27,7 @@ export const algebraWiki = [
     source: ['MacTutor · Viète', 'https://mathshistory.st-andrews.ac.uk/Biographies/Viete/'],
   },
   {
-    id: 'recorde', hall: 'balance', emoji: '🟰', era: '1557 年 · 威尔士', scientist: '雷科德',
+    id: 'recorde', hall: 'equations', emoji: '🟰', era: '1557 年 · 威尔士', scientist: '雷科德',
     title: '等号是怎么来的',
     story: '在雷科德之前，人们写方程要一遍遍写「等于」这个词。雷科德在《砺智石》里画了两条一样长的平行线，说没有什么东西比它们更相等了。这就是我们今天用的等号。等号两边就像天平的两个托盘，永远一样重。',
     homeLab: '🏠 在家试试：用衣架和两个塑料袋做一个天平。两边放上同样多的积木，再同时各拿走 2 块、各放进 1 块，看看它会不会歪。',
@@ -35,7 +35,7 @@ export const algebraWiki = [
     source: ['MacTutor · Recorde', 'https://mathshistory.st-andrews.ac.uk/Biographies/Recorde/'],
   },
   {
-    id: 'khwarizmi', hall: 'tiles', emoji: '📐', era: '约公元 820 年 · 巴格达', scientist: '花拉子米',
+    id: 'khwarizmi', hall: 'expressions', emoji: '📐', era: '约公元 820 年 · 巴格达', scientist: '花拉子米',
     title: '「代数」这个词的来历',
     story: '花拉子米在巴格达的智慧宫写了一本书，书名里的「al-jabr」意思是「还原」，后来就变成了英文的 algebra，也就是代数。他解 x² + 10x = 39 时没有用公式，而是画一个正方形，把 10 条 x 分到两边，再补上一个 5 × 5 的角。',
     homeLab: '🏠 在家试试：用彩纸剪一个大正方形当 x²，剪几条一样长的长条当 x，再剪几个小方块当 1。把长条分到正方形两边，看看缺的那个角要几个小方块才能补齐。',
@@ -43,7 +43,7 @@ export const algebraWiki = [
     source: ['MacTutor · Al-Khwarizmi', 'https://mathshistory.st-andrews.ac.uk/Biographies/Al-Khwarizmi/'],
   },
   {
-    id: 'gauss', hall: 'machines', emoji: '🧮', era: '约 1786 年 · 德国', scientist: '高斯',
+    id: 'gauss', hall: 'patterns', emoji: '🧮', era: '约 1786 年 · 德国', scientist: '高斯',
     title: '一眨眼加到 100',
     story: '传说高斯上小学时，老师让全班把 1 到 100 加起来，想让大家安静一会儿。小高斯很快就交了卷：1 加 100 是 101，2 加 99 也是 101，一共有 50 对，答案是 5050。他没有一个个加，而是先找到了规律。',
     homeLab: '🏠 在家试试：用积木搭一座 6 级楼梯，再搭一座一样的，倒过来拼上去。数一数拼成的长方形有几行几列，一座楼梯是不是正好一半？',
@@ -51,7 +51,7 @@ export const algebraWiki = [
     source: ['MacTutor · Gauss', 'https://mathshistory.st-andrews.ac.uk/Biographies/Gauss/'],
   },
   {
-    id: 'descartes', hall: 'lines', emoji: '🪰', era: '1637 年 · 法国', scientist: '笛卡尔',
+    id: 'descartes', hall: 'functions', emoji: '🪰', era: '1637 年 · 法国', scientist: '笛卡尔',
     title: '天花板上的苍蝇',
     story: '传说笛卡尔躺在床上，看见一只苍蝇在天花板上爬。他想：只要说出苍蝇离两面墙各有多远，就能准确说出它在哪里。这就是坐标。有了坐标，一个方程就能画成一条线，一条线也能写成一个方程。',
     homeLab: '🏠 在家试试：在地板砖上用胶带贴出两条垂直的线当 x 轴和 y 轴。让爸爸说一个坐标，比如 (3, 2)，你跳到那块地砖上。',
@@ -59,18 +59,98 @@ export const algebraWiki = [
     source: ['MacTutor · Descartes', 'https://mathshistory.st-andrews.ac.uk/Biographies/Descartes/'],
   },
   {
-    id: 'galileo', hall: 'curves', emoji: '⚾', era: '1638 年 · 意大利', scientist: '伽利略',
+    id: 'galileo', hall: 'functions', emoji: '⚾', era: '1638 年 · 意大利', scientist: '伽利略',
     title: '扔出去的球走的是抛物线',
     story: '伽利略让小球从斜坡滚下、再飞出桌面，仔细量它落地的位置。他发现：往前飞的距离均匀增加，往下落的距离却按 1、4、9、16 这样增加。往前和往下合在一起，正好是一条抛物线。',
     homeLab: '🏠 在家试试：在阳台或院子里，用水管或喷壶斜着往上喷水，看看水流画出的弯线。把喷口抬高或压低，它的顶点会怎么挪？',
     relatedLabId: 'marble-slides', relatedLabTitle: '弹珠滑梯',
     source: ['MacTutor · Galileo', 'https://mathshistory.st-andrews.ac.uk/Biographies/Galileo/'],
   },
+  {
+    id: 'liuhui', hall: 'equations', emoji: '🥢', era: '公元 263 年 · 中国魏晋', scientist: '刘徽',
+    title: '用竹棍摆出来的方程组',
+    story: '一千七百多年前，刘徽为《九章算术》作注。古人解多元一次方程组时，用一排排红色和黑色的算筹（小竹棍）摆成方阵：红筹代表正数，黑筹代表负数，两列互乘再相减，一列一列把未知数消掉——比西方的高斯消元法早了一千五百年。',
+    homeLab: '🏠 在家试试：拿几枚硬币当头、牙签当脚，在桌上摆出「5 个头、14 只脚」。先给每个硬币配 2 根牙签，看看手里剩下的牙签怎么一双一双添成兔子。',
+    relatedLabId: 'chicken-rabbit', relatedLabTitle: '鸡兔同笼：抬起两只脚',
+    source: ['MacTutor · Liu Hui', 'https://mathshistory.st-andrews.ac.uk/Biographies/Liu_Hui/'],
+  },
+  {
+    id: 'archimedes', hall: 'equations', emoji: '⚙️', era: '约公元前 250 年 · 叙拉古', scientist: '阿基米德',
+    title: '给我一个支点，我能撬动地球',
+    story: '阿基米德在《论平面图形的平衡》里用严密的推理证明了杠杆定律：两个物体要平衡，重量与离支点距离的乘积必须相等。哪怕再轻的力，只要离支点足够远，乘出来的力矩也能敌过千斤重物。',
+    homeLab: '🏠 在家试试：把一把硬尺架在橡皮擦上当跷跷板。左边离橡皮 2 厘米放 3 枚硬币，试试右边 1 枚硬币要放到几厘米处才能让尺子水平。',
+    relatedLabId: 'lever-balance', relatedLabTitle: '阿基米德跷跷板',
+    source: ['MacTutor · Archimedes', 'https://mathshistory.st-andrews.ac.uk/Biographies/Archimedes/'],
+  },
+  {
+    id: 'yanghui', hall: 'expressions', emoji: '🏮', era: '1261 年 · 中国南宋', scientist: '杨辉',
+    title: '比帕斯卡早四百年的数字宝塔',
+    story: '南宋数学家杨辉在《详解九章算法》里收录了贾宪发现的「开方作法本源图」，也就是今天常说的杨辉三角。不管要把 (a + b) 乘几次方，不用苦苦展开，只要顺着这座宝塔一行行做加法，所有系数就整整齐齐站在眼前。',
+    homeLab: '🏠 在家试试：在方格纸上自己往下写到第 7 行，把所有的奇数格涂上颜色，退远一点看——里面竟然浮现出一座大套小的三角形分形！',
+    relatedLabId: 'yanghui-triangle', relatedLabTitle: '杨辉三角与展开式',
+    source: ['MacTutor · Yang Hui', 'https://mathshistory.st-andrews.ac.uk/Biographies/Yang_Hui/'],
+  },
+  {
+    id: 'brahmagupta', hall: 'expressions', emoji: '0️⃣', era: '公元 628 年 · 印度', scientist: '婆罗摩笈多',
+    title: '用财产和债务讲清正负数',
+    story: '古印度数学家婆罗摩笈多在《婆罗摩修正体系》里第一次把 0 当成真正的数，并定下了正负数的加减乘除法则：他把正数叫「财产」，负数叫「债务」，减去一笔债务就等于增加一笔财产——负负得正从此有了最直观的解释。',
+    homeLab: '🏠 在家试试：拿一张 8×8 方格纸剪掉右上角 3×3，再沿着拐角剪一刀拼成长方形，数数是不是正好等于 11×5 = 55 格。',
+    relatedLabId: 'diff-squares', relatedLabTitle: '剪一刀拼出平方差',
+    source: ['MacTutor · Brahmagupta', 'https://mathshistory.st-andrews.ac.uk/Biographies/Brahmagupta/'],
+  },
+  {
+    id: 'harriot', hall: 'inequalities', emoji: '🐊', era: '1631 年 · 英国', scientist: '哈里奥特',
+    title: '开口朝大数的大于号与小于号',
+    story: '英国数学家托马斯·哈里奥特既用望远镜画过月球地图，也革新了代数写法。在他的遗著《实用分析术》里，第一次出现了今天全世界通用的大于号「>」和小于号「<」：两条线张开大嘴对着大的数，收拢尖角指着小的数，一眼就不会认错。',
+    homeLab: '🏠 在家试试：在地上画一条 −5 到 5 的数轴，你站 +2、爸爸站 +4（爸爸在你右边）；口令「乘 −1」后两人同时跳到相反数 −2 和 −4，看看谁在右边！',
+    relatedLabId: 'number-line-ineq', relatedLabTitle: '数轴射灯与变号',
+    source: ['MacTutor · Harriot', 'https://mathshistory.st-andrews.ac.uk/Biographies/Harriot/'],
+  },
+  {
+    id: 'dantzig', hall: 'inequalities', emoji: '📋', era: '1947 年 · 美国', scientist: '丹齐格',
+    title: '沿着多边形尖角找最优方案',
+    story: '乔治·丹齐格读博士时有一次上课迟到，以为黑板上的两道题是家庭作业，苦思几天做了出来——其实那是统计学界悬而未决的公开难题！后来他发明了线性规划的「单纯形法」：在成百上千条不等式围出的多面体上，顺着顶点一步步跳向最优解，今天航班排班和物流配送都离不开它。',
+    homeLab: '🏠 在家试试：拿 10 元预算列两样零食的价格，在方格纸上标出所有买得起的组合点，看看买得最多件数的点是不是落在边界角落上。',
+    relatedLabId: 'pocket-budget', relatedLabTitle: '零花钱采购计划',
+    source: ['MacTutor · George Dantzig', 'https://mathshistory.st-andrews.ac.uk/Biographies/Dantzig_George/'],
+  },
+  {
+    id: 'fibonacci', hall: 'patterns', emoji: '🐇', era: '1202 年 · 意大利比萨', scientist: '斐波那契',
+    title: '把阿拉伯数字和兔子数列带进欧洲',
+    story: '少年斐波那契跟着做商人的父亲走遍地中海，发现印度-阿拉伯数字（0 到 9）比笨重的罗马数字好用太多了。他在《计算之书》里写下一道小兔繁衍趣题，引出了 1, 1, 2, 3, 5, 8, 13……后来人们发现向日葵籽和松果鳞片的螺旋数，居然也偏爱这串数字。',
+    homeLab: '🏠 在家试试：找一颗松果或向日葵照片，顺时针数一圈有几条螺旋，再逆时针数一圈有几条螺旋，看看是不是相邻的两个斐波那契数！',
+    relatedLabId: 'fibonacci-spiral', relatedLabTitle: '兔子数列与黄金长方形',
+    source: ['MacTutor · Fibonacci', 'https://mathshistory.st-andrews.ac.uk/Biographies/Fibonacci/'],
+  },
+  {
+    id: 'zeno', hall: 'patterns', emoji: '🐢', era: '约公元前 450 年 · 古希腊', scientist: '芝诺',
+    title: '永远追不上的乌龟与无穷级数',
+    story: '古希腊哲学家芝诺提出过一个著名谜题：飞毛腿阿基里斯追乌龟，每次追到乌龟刚才的位置，乌龟又往前爬了一小段——无穷多段路怎么走得完？用切半正方形一看就明白了：1/2 + 1/4 + 1/8 + … 虽有无穷多项，加起来的总路程和时间却是有限的 1！',
+    homeLab: '🏠 在家试试：拿一张 A4 纸对折撕开留一半（1/2），把剩下的一半再对折放旁边（1/4），连做 5 次，把撕下的纸片拼回桌面看看离一整张还差多少。',
+    relatedLabId: 'halving-square', relatedLabTitle: '切半正方形：无穷求和',
+    source: ['MacTutor · Zeno of Elea', 'https://mathshistory.st-andrews.ac.uk/Biographies/Zeno_of_Elea/'],
+  },
+  {
+    id: 'napier', hall: 'exponents', emoji: '🦴', era: '1614 年 · 苏格兰', scientist: '纳皮尔',
+    title: '把大数乘法变成指数做加法',
+    story: '天文学家算行星轨道时，动不动就要乘七八位的大数，算错一位前功尽弃。苏格兰学者纳皮尔花了二十年造出对数表，还发明了便携算筹「纳皮尔算骨」：因为 2³ × 2⁴ = 2³⁺⁴ = 2⁷，只要查出每个数是几的几次方，麻烦的乘法当场变成轻松的加法！',
+    homeLab: '🏠 在家试试：写一排 2 的幂（1, 2, 4, 8, 16, 32, 64, 128），算 8 × 16 时不背乘法口诀，只数第 3 个和第 4 个加起来跳到第 7 个（128）！',
+    relatedLabId: 'wheat-chessboard', relatedLabTitle: '棋盘上的麦粒',
+    source: ['MacTutor · John Napier', 'https://mathshistory.st-andrews.ac.uk/Biographies/Napier/'],
+  },
+  {
+    id: 'leibniz', hall: 'exponents', emoji: '💡', era: '1703 年 · 德国', scientist: '莱布尼茨',
+    title: '只用 0 和 1 写出世间所有数',
+    story: '莱布尼茨系统研究了逢二进一的二进制：无论多大的数，都只需要 0 和 1 两个符号就能写出来。当他看到中国寄来的《易经》六十四卦图（阴爻断、阳爻连）时激动万分，发现那正是一张从 0 到 63 的六位二进制表！三百年后，所有电子计算机都建立在开关通断的 0 和 1 之上。',
+    homeLab: '🏠 在家试试：伸出右手 5 根手指，从大拇指到小指依次代表 16、8、4、2、1。试试只用一只手就能比出从 1 到 31 的任意一个数！',
+    relatedLabId: 'exploding-dots', relatedLabTitle: '爆炸圆点进制机',
+    source: ['MacTutor · Leibniz', 'https://mathshistory.st-andrews.ac.uk/Biographies/Leibniz/'],
+  },
 ];
 
 export const algebraTalks = [
   {
-    emoji: '🔣', hall: 'mobiles',
+    emoji: '🔣', hall: 'expressions',
     title: '为什么要用 x 这样的字母？直接写数不行吗？',
     turns: [
       { nian: '爸爸，为什么数学书里老有 x？写数字不是更清楚吗？', dad: '有时候我们还不知道那个数是几，就先给它起个名字，叫 x。就像挂件谜题里的圆球，先不管它多重，照样能把关系写下来。' },
@@ -79,7 +159,7 @@ export const algebraTalks = [
     wrap: '原来 x 就是一个装着秘密数字的口袋！',
   },
   {
-    emoji: '⚖️', hall: 'balance',
+    emoji: '⚖️', hall: 'equations',
     title: '解方程时，为什么「移项要变号」？',
     turns: [
       { nian: '老师说把 −3 移到等号另一边要变成 +3，为什么呀？', dad: '其实不是「移」过去的，是两边同时放了 3 个砝码。左边 3 个气球被抵消了，右边就多了 3。' },
@@ -88,7 +168,7 @@ export const algebraTalks = [
     wrap: '移项变号，原来就是天平两边同时加一样的砝码！',
   },
   {
-    emoji: '🟦', hall: 'tiles',
+    emoji: '🟦', hall: 'expressions',
     title: '(a + b)² 为什么不等于 a² + b²？',
     turns: [
       { nian: '(x + 3)² 不就是 x² + 9 吗？', dad: '拼一拼就知道了：边长是 x + 3 的正方形，除了一块 x² 和 9 个小方块，还有两条 3 × x 的长条！' },
@@ -97,7 +177,7 @@ export const algebraTalks = [
     wrap: '拼瓷砖的时候，中间那两条长条可不能忘！',
   },
   {
-    emoji: '🔍', hall: 'machines',
+    emoji: '🔍', hall: 'patterns',
     title: '找到规律以后，怎么确定它一直对？',
     turns: [
       { nian: '我数了前三个图案，就能说规律是 1 + 3n 吗？', dad: '光数几个只能算猜。要看图说清楚为什么：每加一个正方形，只多出上、下、右三根火柴，左边那根是和前一个共用的。' },
@@ -106,7 +186,7 @@ export const algebraTalks = [
     wrap: '规律不光要数出来，还要看出它为什么一直对！',
   },
   {
-    emoji: '📏', hall: 'lines',
+    emoji: '📏', hall: 'functions',
     title: '斜率是负数，是什么意思？',
     turns: [
       { nian: '斜率 −1 的直线，往哪边斜？', dad: '从左往右走，斜率是正数就上坡，是负数就下坡。−1 就是往右走一格，往下降一格。' },
@@ -115,12 +195,66 @@ export const algebraTalks = [
     wrap: '斜率就是从左往右走时，路是上坡、下坡还是平路！',
   },
   {
-    emoji: '🎢', hall: 'curves',
+    emoji: '🎢', hall: 'functions',
     title: '为什么 a 是负数，抛物线就倒过来了？',
     turns: [
       { nian: '(x − h)² 总是大于等于 0 的吧？', dad: '对，一个数的平方不会是负数，所以 a 是正数时，图像最低点就是顶点，开口朝上。' },
       { nian: '那乘上一个负数，就全都翻过来啦！', dad: '没错，所有的值都变成负的，顶点变成了最高点，开口就朝下，像拱桥一样。' },
     ],
     wrap: 'a 的正负，决定抛物线是山谷还是拱桥！',
+  },
+  {
+    emoji: '🐇', hall: 'equations',
+    title: '为什么两个未知数，光有一条等式猜不出答案？',
+    turns: [
+      { nian: '爸爸，如果只告诉我「鸡和兔一共 8 个头」，我能算出几只兔吗？', dad: '算不唯一呀：1 只兔 7 只鸡是 8 个头，3 只兔 5 只鸡也是 8 个头。x + y = 8 有好多组答案呢。' },
+      { nian: '再加上「一共 22 只脚」，答案就锁死成唯一一组啦！', dad: '对！多一个未知数，就要多一条独立的等量线索。两条线索联手消掉一个未知数，真相就水落石出了。' },
+    ],
+    wrap: '两个未知数要靠两条线索联手，先消掉一个再捉另一个！',
+  },
+  {
+    emoji: '🪞', hall: 'inequalities',
+    title: '为什么 3 > 1 两边乘 −1，不能写成 −3 > −1？',
+    turns: [
+      { nian: '天平两边做同样的事都相等，为什么不等式乘负数却要翻符号？', dad: '想想冬天温度计：零上 3 度比零上 1 度暖和，可零下 3 度比零下 1 度更冷呀！' },
+      { nian: '噢！离 0 越远，正数越大，负数反而越小！', dad: '没错，乘 −1 把整条数轴左右翻了个面，谁左谁右全反过来了，不等号当然要跟着转头。' },
+    ],
+    wrap: '乘负数就像温度计翻到零下，离 0 越远反而越小！',
+  },
+  {
+    emoji: '💎', hall: 'inequalities',
+    title: '为什么采购最划算的方案，老是停在多边形的尖角上？',
+    turns: [
+      { nian: '可行域肚子里有那么多点，为什么最高分不在正中间？', dad: '如果在正中间，说明钱也没花完、书包也没装满，你还能再多拿一件呀！' },
+      { nian: '一直往右上多拿，就会撞到边界，再顺着边界滑到尖角卡住！', dad: '被你说透啦！两条限制同时用满的那个交点尖角，往往就是把资源发挥到极致的冠军点。' },
+    ],
+    wrap: '不浪费每一分钱和每一格空间，最优解自然推到了边界尖角上！',
+  },
+  {
+    emoji: '🍰', hall: 'patterns',
+    title: '无穷多个正数加起来，为什么不会变成无穷大？',
+    turns: [
+      { nian: '1 + 1 + 1 一直加会无穷大，为什么 1/2 + 1/4 + 1/8 一直加却超不过 1？', dad: '关键看后面添上的数缩得有多快！切半正方形里，所有切下来的碎片原本就住在一块面积为 1 的蛋糕里。' },
+      { nian: '不管切多少刀，碎片总不能比整块蛋糕还大！', dad: '对极了，而且剩下的空白每次减半趋向 0，所以无穷多块合起来正好填满 1。' },
+    ],
+    wrap: '住在同一个正方形里的无穷多块碎片，合起来绝不会撑破正方形！',
+  },
+  {
+    emoji: '0️⃣', hall: 'exponents',
+    title: '为什么 2⁰、5⁰、100⁰ 全都等于 1，而不是 0？',
+    turns: [
+      { nian: '0 个 2 相乘，怎么不是 0 反而是 1 呀？', dad: '倒着看棋盘麦粒就懂了：2³ = 8，往回退一格除以 2 是 2² = 4，再退一格除以 2 是 2¹ = 2。' },
+      { nian: '再往回退一格除以 2，2 ÷ 2 = 1，那就是 2⁰ = 1！', dad: '完全正确！换成 5 也一样：5² = 25，5¹ = 5，再除以 5 就是 5⁰ = 1（只要底数不是 0）。' },
+    ],
+    wrap: '指数每减 1 就是除以一次底数，所以退到 0 次方正好是自己除以自己等于 1！',
+  },
+  {
+    emoji: '💻', hall: 'exponents',
+    title: '人类习惯十进制，计算机为什么偏偏只用二进制？',
+    turns: [
+      { nian: '二进制写 13 要写四位 1101，没有十进制短，电脑为什么不学十进制？', dad: '人长了十根手指，数到十进位最顺手；可电脑肚子里全是微小的电路开关。' },
+      { nian: '开关只有「通电」和「断电」两种状态，正好对应 1 和 0！', dad: '对！区分「亮和灭」比区分十种强弱电压稳当一万倍，不容易出错。' },
+    ],
+    wrap: '十根手指选了十进制，电路开关的通和断选了最稳当的二进制！',
   },
 ];

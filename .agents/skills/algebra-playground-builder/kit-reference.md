@@ -46,7 +46,7 @@ export function myLab({ board, controls, stats, guide, records, lesson, signal, 
 - 画板上的 `--hue`（等于展馆的 `--bubble`）和 `--hue-ink` 供实验图形取色，新实验优先用它们。
 - 通用：`structural`、`aux`、`result`、`shape`、`plane-bg` / `plane-grid` / `plane-axis` / `plane-tick` / `plane-name`、`hotspot`。
 - 各实验的专用类以实验为前缀：`mobile-*`、`trick-*`、`scale-*`、`tile-*`、`machine-*`、`match-*` / `stair-*`、`laser-*` / `alien-*`、`marble-*` / `star-*`、`sort-card` / `card-*`。卡片组本身不要用 `card` 类（`base.css` 已占用）。
-- 页面外壳颜色跟着展馆走：`.page` 设置 `--bubble`，`app.css` 派生出 `--hall`、`--hall-soft`、`--hall-line`、`--hall-ink`。三步走分组用 `--stage`。
+- 页面外壳颜色跟着展馆走：`.page` 设置 `--bubble`，`app.css` 派生出 `--hall`、`--hall-soft`、`--hall-line`、`--hall-ink`。
 
 ---
 
@@ -64,7 +64,7 @@ export function myLab({ board, controls, stats, guide, records, lesson, signal, 
 
 | 地址 | 页面 |
 | --- | --- |
-| `#` | 首页 `HomePage`：代数明星轮播、搜索、三步走展馆 |
+| `#` | 首页 `HomePage`：代数明星轮播、搜索、六座学科展馆 |
 | `#hall/<id>` | 展馆 `HallPage`：问题按难度分组、这座馆的游乐场、代数故事 |
 | `#q/<id>` | 问答 `QuestionPage`：左边对话、右边 `QuestionFilm` 动画 |
 | `#play`、`#play/<id>` | 游乐场目录与独立游乐场 `PlayRoute` |
@@ -77,7 +77,7 @@ export function myLab({ board, controls, stats, guide, records, lesson, signal, 
 ## 5. `src/catalog.js` 登记格式
 
 ```js
-{ id: 'balance', name: '天平解方程', stage: 'play', summary: '……', lessons: [
+{ id: 'equations', name: '等式与方程', summary: '……', lessons: [
   { id: 'balance-scale', name: '天平上的方程', tag: '一元一次方程',
     intro: '天平上放着几个装了秘密数字的 x 盒子和一些砝码……',
     idea: '天平平着，说明两边相等。两边同时拿走一样的东西，天平还是平的……',

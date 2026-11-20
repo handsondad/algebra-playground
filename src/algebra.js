@@ -411,3 +411,439 @@ export const cardTable = fn => CARD_XS.map(x => [x, cardValue(fn, x)]);
 export function sameFunction(f, g) {
   return [-3, -2, -1, 0, 1, 2, 3].every(x => near(cardValue(f, x), cardValue(g, x)));
 }
+
+/* ───────── 鸡兔同笼：抬脚法与二元一次方程组 ───────── */
+export const cageLevels = [
+  { name: '院子一角', heads: 8, legs: 22, solution: { chickens: 5, rabbits: 3 } },
+  { name: '热闹竹笼', heads: 10, legs: 28, solution: { chickens: 6, rabbits: 4 } },
+  { name: '孙子算经缩影', heads: 9, legs: 26, solution: { chickens: 5, rabbits: 4 } },
+  { name: '兔子多起来', heads: 11, legs: 34, solution: { chickens: 5, rabbits: 6 } },
+];
+
+export function solveCage(heads, legs) {
+  if (heads < 0 || legs < 2 * heads || legs > 4 * heads || legs % 2 !== 0) return null;
+  const rabbits = (legs - 2 * heads) / 2;
+  return { chickens: heads - rabbits, rabbits, liftedLegs: 2 * heads, remainingLegs: legs - 2 * heads };
+}
+
+export function cageCheck(heads, targetLegs, rabbits, lifted = false) {
+  const r = clamp(Math.round(rabbits), 0, heads), c = heads - r;
+  const totalLegs = 2 * c + 4 * r;
+  return {
+    chickens: c,
+    rabbits: r,
+    totalLegs,
+    groundLegs: lifted ? 2 * r : totalLegs,
+    targetGround: lifted ? targetLegs - 2 * heads : targetLegs,
+    solved: totalLegs === targetLegs,
+  };
+}
+
+/* ───────── 阿基米德跷跷板（力矩平衡 w₁d₁ = w₂d₂） ───────── */
+export const leverLevels = [
+  { name: '爸爸和小念', left: [{ w: 6, d: 2 }], rightFixed: [], moverWeight: 3, solution: 4 },
+  { name: '重重的大西瓜', left: [{ w: 8, d: 3 }], rightFixed: [], moverWeight: 4, solution: 6 },
+  { name: '两个包裹一起坐', left: [{ w: 4, d: 5 }, { w: 2, d: 2 }], rightFixed: [], moverWeight: 3, solution: 8 },
+  { name: '右边也有帮手', left: [{ w: 5, d: 6 }], rightFixed: [{ w: 2, d: 3 }], moverWeight: 4, solution: 6 },
+];
+
+export function leverStatus(level, peg) {
+  const d = clamp(Math.round(peg), 1, 8);
+  const leftTorque = level.left.reduce((s, it) => s + it.w * it.d, 0);
+  const rightFixedTorque = level.rightFixed.reduce((s, it) => s + it.w * it.d, 0);
+  const rightTorque = rightFixedTorque + level.moverWeight * d;
+  return {
+    peg: d,
+    leftTorque,
+    rightFixedTorque,
+    rightTorque,
+    balanced: near(leftTorque, rightTorque),
+    tilt: tiltDegrees(leftTorque, rightTorque, 13),
+  };
+}
+
+/* ───────── 平方差割补：a² − b² = (a + b)(a − b) ───────── */
+export function diffSquares(a, b) {
+  const aa = Math.max(2, Math.round(a));
+  const bb = clamp(Math.round(b), 1, aa - 1);
+  const a2 = aa * aa, b2 = bb * bb, area = a2 - b2;
+  const sum = aa + bb, diff = aa - bb;
+  return { a: aa, b: bb, a2, b2, area, sum, diff, product: sum * diff, equal: area === sum * diff };
+}
+
+/* ───────── 杨辉三角与二项展开 (a + b)ⁿ ───────── */
+const SUP_DIGITS = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'];
+export const supText = n => String(n).split('').map(ch => SUP_DIGITS[Number(ch)] ?? ch).join('');
+
+export function yanghuiRows(maxRow = 6) {
+  const rows = [[1]];
+  for (let r = 1; r <= maxRow; r += 1) {
+    const prev = rows[r - 1];
+    rows.push(Array.from({ length: r + 1 }, (_, k) => (prev[k - 1] ?? 0) + (prev[k] ?? 0)));
+  }
+  return rows;
+}
+
+export const yanghuiRowSum = n => yanghuiRows(n)[n].reduce((s, v) => s + v, 0);
+
+export function binomialTermText(n, k, coef) {
+  if (n === 0) return '1';
+  const aExp = n - k, bExp = k;
+  const aPart = aExp === 0 ? '' : aExp === 1 ? 'a' : `a${supText(aExp)}`;
+  const bPart = bExp === 0 ? '' : bExp === 1 ? 'b' : `b${supText(bExp)}`;
+  return `${coef === 1 ? '' : coef}${aPart}${bPart}`;
+}
+
+export function binomialText(n) {
+  if (n === 0) return '1';
+  const row = yanghuiRows(n)[n];
+  return row.map((coef, k) => binomialTermText(n, k, coef)).join(' + ');
+}
+
+/* ───────── 数轴不等式与乘负翻号 ───────── */
+const INEQ_FLIP = { '<': '>', '>': '<', '<=': '>=', '>=': '<=' };
+const INEQ_SYM = { '<': '<', '>': '>', '<=': '≤', '>=': '≥' };
+
+export const flipIneqOp = op => INEQ_FLIP[op];
+export const ineqSymbol = op => INEQ_SYM[op];
+
+export function ineqHolds(lhs, op, rhs) {
+  if (op === '<') return lhs < rhs - 1e-9;
+  if (op === '>') return lhs > rhs + 1e-9;
+  if (op === '<=') return lhs <= rhs + 1e-9;
+  return lhs >= rhs - 1e-9;
+}
+
+export const ineqLevels = [
+  { name: '两边同减', state: { a: 1, b: 3, op: '<', c: 7 }, solution: { op: '<', bound: 4 } },
+  { name: '同加再平分', state: { a: 2, b: -2, op: '>=', c: 4 }, solution: { op: '>=', bound: 3 } },
+  { name: '乘 −1 照镜子翻号', state: { a: -1, b: 0, op: '<', c: -2 }, solution: { op: '>', bound: 2 } },
+  { name: '移项再翻号', state: { a: -2, b: 4, op: '<=', c: 10 }, solution: { op: '>=', bound: -3 } },
+];
+
+export const ineqText = s => `${termsText([[s.a, 'x'], [s.b, '']])} ${ineqSymbol(s.op)} ${fmt(s.c)}`;
+export const ineqSatisfies = (s, x) => ineqHolds(s.a * x + s.b, s.op, s.c);
+
+export function ineqRay(s) {
+  const bound = (s.c - s.b) / s.a;
+  const op = s.a < 0 ? flipIneqOp(s.op) : s.op;
+  return { op, bound, inclusive: op === '<=' || op === '>=', right: op === '>' || op === '>=' };
+}
+
+export const ineqSolved = s => s.a === 1 && s.b === 0;
+
+export function applyIneqOp(s, action) {
+  if (action.kind === 'add') {
+    const nextB = s.b + action.d, nextC = s.c + action.d;
+    if (Math.abs(nextB) > 16 || Math.abs(nextC) > 20) return null;
+    return { a: s.a, b: nextB, op: s.op, c: nextC };
+  }
+  if (action.kind === 'divPos') {
+    const k = action.k;
+    if (k < 2 || [s.a, s.b, s.c].some(v => v % k !== 0)) return null;
+    return { a: s.a / k, b: s.b / k, op: s.op, c: s.c / k };
+  }
+  if (action.kind === 'negate') {
+    return { a: -s.a, b: -s.b, op: flipIneqOp(s.op), c: -s.c };
+  }
+  return null;
+}
+
+export function solveIneqSteps(initial) {
+  const steps = [];
+  let s = { ...initial };
+  if (s.b !== 0) {
+    const d = -s.b;
+    s = applyIneqOp(s, { kind: 'add', d });
+    steps.push({ label: d > 0 ? `两边同加 ${d}` : `两边同减 ${-d}`, state: { ...s } });
+  }
+  if (s.a < 0) {
+    s = applyIneqOp(s, { kind: 'negate' });
+    steps.push({ label: '两边同乘 −1（不等号掉头！）', state: { ...s } });
+  }
+  if (s.a > 1) {
+    const k = s.a;
+    s = applyIneqOp(s, { kind: 'divPos', k });
+    steps.push({ label: `两边同除以 ${k}`, state: { ...s } });
+  }
+  return steps;
+}
+
+/* ───────── 半平面探照灯（二元一次不等式组） ───────── */
+/** 用半平面 ax + by ≤ c 裁剪凸多边形（Sutherland–Hodgman） */
+export function clipHalfPlane(poly, a, b, c) {
+  if (!poly.length) return [];
+  const val = p => a * p.x + b * p.y - c;
+  const out = [];
+  for (let i = 0; i < poly.length; i += 1) {
+    const cur = poly[i], nxt = poly[(i + 1) % poly.length];
+    const vc = val(cur), vn = val(nxt);
+    const inC = vc <= 1e-9, inN = vn <= 1e-9;
+    if (inC) out.push(cur);
+    if (inC !== inN) {
+      const t = vc / (vc - vn);
+      out.push(pt(cur.x + (nxt.x - cur.x) * t, cur.y + (nxt.y - cur.y) * t));
+    }
+  }
+  return out;
+}
+
+/** dir = 1 表示 y ≥ mx + b（即 mx − y ≤ −b）；dir = -1 表示 y ≤ mx + b（即 −mx + y ≤ b） */
+export const halfPlaneCoeffs = (m, b, dir) => (dir > 0 ? { a: m, b: -1, c: -b } : { a: -m, b: 1, c: b });
+export const inHalfPlane = (p, m, b, dir) => (dir > 0 ? p.y >= m * p.x + b - 1e-9 : p.y <= m * p.x + b + 1e-9);
+export const halfPlaneText = (m, b, dir) => `y ${dir > 0 ? '≥' : '≤'} ${termsText([[m, 'x'], [b, '']])}`;
+
+export const radarLevels = [
+  {
+    name: '屋顶下的宝石',
+    gems: [pt(0, 1), pt(-1, 0), pt(1, 0)],
+    mines: [pt(0, 4), pt(-4, 0), pt(4, 0)],
+    solution: { m1: 1, b1: 2, dir1: -1, m2: -1, b2: 2, dir2: -1 },
+  },
+  {
+    name: '山谷安全区',
+    gems: [pt(0, 2), pt(-1, 3), pt(2, 3)],
+    mines: [pt(0, -1), pt(-3, 2), pt(4, 1)],
+    solution: { m1: -1, b1: 1, dir1: 1, m2: 0.5, b2: 1, dir2: 1 },
+  },
+  {
+    name: '斜走廊通道',
+    gems: [pt(-2, -1), pt(0, 1), pt(2, 3)],
+    mines: [pt(-2, 3), pt(2, -1), pt(0, 4)],
+    solution: { m1: 1, b1: 2, dir1: -1, m2: 1, b2: 0, dir2: 1 },
+  },
+  {
+    name: '右上宝藏角',
+    gems: [pt(2, 2), pt(3, 1), pt(4, 2)],
+    mines: [pt(0, 2), pt(2, -2), pt(3, 4)],
+    solution: { m1: -0.5, b1: 4, dir1: -1, m2: -2, b2: 4, dir2: 1 },
+  },
+];
+
+export function radarCheck(level, cfg) {
+  const inside = p => inHalfPlane(p, cfg.m1, cfg.b1, cfg.dir1) && inHalfPlane(p, cfg.m2, cfg.b2, cfg.dir2);
+  const gemHits = level.gems.map(inside);
+  const mineHits = level.mines.map(inside);
+  return { gemHits, mineHits, won: gemHits.every(Boolean) && mineHits.every(h => !h) };
+}
+
+/* ───────── 零花钱采购计划（线性规划 · 可行域与顶点最优） ───────── */
+export const budgetLevels = [
+  {
+    name: '画册与彩笔',
+    xLabel: '画册', yLabel: '彩笔', goalUnit: '张贴纸',
+    c1: { a: 2, b: 3, max: 18, name: '零花钱 2x + 3y ≤ 18 元' },
+    c2: { a: 1, b: 1, max: 7, name: '书包容量 x + y ≤ 7 件' },
+    obj: { p: 3, q: 4, name: '赠品贴纸 3x + 4y' },
+    solution: { x: 3, y: 4, best: 25 },
+  },
+  {
+    name: '班级义卖烘焙',
+    xLabel: '饼干盒', yLabel: '松饼盒', goalUnit: '元善款',
+    c1: { a: 1, b: 2, max: 10, name: '黄油 x + 2y ≤ 10 份' },
+    c2: { a: 2, b: 1, max: 11, name: '鸡蛋 2x + y ≤ 11 个' },
+    obj: { p: 3, q: 4, name: '义卖善款 3x + 4y' },
+    solution: { x: 4, y: 3, best: 24 },
+  },
+  {
+    name: '科学社做模型',
+    xLabel: '小车', yLabel: '飞船', goalUnit: '分积分',
+    c1: { a: 2, b: 1, max: 12, name: '轮子组 2x + y ≤ 12' },
+    c2: { a: 1, b: 2, max: 12, name: '马达组 x + 2y ≤ 12' },
+    obj: { p: 5, q: 4, name: '比赛积分 5x + 4y' },
+    solution: { x: 4, y: 4, best: 36 },
+  },
+];
+
+export const budgetFeasible = (lv, x, y) =>
+  x >= 0 && y >= 0 && lv.c1.a * x + lv.c1.b * y <= lv.c1.max + 1e-9 && lv.c2.a * x + lv.c2.b * y <= lv.c2.max + 1e-9;
+
+export const budgetScore = (lv, x, y) => lv.obj.p * x + lv.obj.q * y;
+
+export function budgetFeasiblePoints(lv, maxCoord = 10) {
+  const pts = [];
+  for (let x = 0; x <= maxCoord; x += 1) {
+    for (let y = 0; y <= maxCoord; y += 1) {
+      if (budgetFeasible(lv, x, y)) pts.push({ x, y, score: budgetScore(lv, x, y) });
+    }
+  }
+  return pts;
+}
+
+export function budgetPolygon(lv, bound = 10) {
+  let poly = [pt(0, 0), pt(bound, 0), pt(bound, bound), pt(0, bound)];
+  poly = clipHalfPlane(poly, lv.c1.a, lv.c1.b, lv.c1.max);
+  poly = clipHalfPlane(poly, lv.c2.a, lv.c2.b, lv.c2.max);
+  return poly;
+}
+
+/* ───────── 奇数拐尺拼正方形：1 + 3 + … + (2n − 1) = n² ───────── */
+export const oddTerm = k => 2 * k - 1;
+export const oddSum = n => Array.from({ length: n }, (_, i) => oddTerm(i + 1)).reduce((s, v) => s + v, 0);
+
+export function gnomonCells(n) {
+  const cells = [];
+  for (let r = 0; r < n; r += 1) {
+    for (let c = 0; c < n; c += 1) {
+      cells.push({ row: r, col: c, layer: Math.max(r, c) + 1, lowerTri: r >= c });
+    }
+  }
+  return cells;
+}
+
+/* ───────── 斐波那契数列与黄金长方形 ───────── */
+export const PHI = (1 + Math.sqrt(5)) / 2;
+
+export function fibNumbers(count) {
+  const out = [];
+  for (let i = 0; i < count; i += 1) out.push(i < 2 ? 1 : out[i - 1] + out[i - 2]);
+  return out;
+}
+
+/**
+ * 把边长 1, 1, 2, 3, 5, … 的正方形依次往右、上、左、下拼成大长方形。
+ * 数学坐标 y 向上；每个正方形记左下角 (x, y) 和边长 size，以及四分之一圆弧的起点、终点和圆心。
+ */
+export function fibSquares(count) {
+  const nums = fibNumbers(Math.max(2, count));
+  const squares = [
+    { index: 0, size: 1, x: 0, y: 0, dir: 3 },
+    { index: 1, size: 1, x: 1, y: 0, dir: 0 },
+  ];
+  let xmin = 0, xmax = 2, ymin = 0, ymax = 1;
+  // 依次往：上(1)、左(2)、下(3)、右(0) 贴正方形
+  const dirs = [1, 2, 3, 0];
+  for (let i = 2; i < nums.length; i += 1) {
+    const s = nums[i], dir = dirs[(i - 2) % 4];
+    let x = xmin, y = ymin;
+    if (dir === 1) { x = xmin; y = ymax; ymax += s; }
+    else if (dir === 2) { x = xmin - s; y = ymin; xmin -= s; }
+    else if (dir === 3) { x = xmin; y = ymin - s; ymin -= s; }
+    else { x = xmax; y = ymin; xmax += s; }
+    squares.push({ index: i, size: s, x, y, dir });
+  }
+  return {
+    squares: squares.slice(0, count),
+    nums: nums.slice(0, count),
+    box: { xmin, ymin, xmax, ymax, width: xmax - xmin, height: ymax - ymin },
+    ratio: nums[count - 1] / nums[count - 2],
+  };
+}
+
+/* ───────── 切半正方形：1/2 + 1/4 + 1/8 + … + 1/2ⁿ = 1 − 1/2ⁿ ───────── */
+export function halvingPieces(steps) {
+  const n = clamp(Math.round(steps), 1, 8);
+  const pieces = [];
+  let rx = 0, ry = 0, rw = 1, rh = 1;
+  for (let k = 1; k <= n; k += 1) {
+    if (k % 2 === 1) {
+      rw /= 2;
+      pieces.push({ step: k, x: rx, y: ry, w: rw, h: rh, denom: 2 ** k, area: 2 ** -k });
+      rx += rw;
+    } else {
+      rh /= 2;
+      pieces.push({ step: k, x: rx, y: ry, w: rw, h: rh, denom: 2 ** k, area: 2 ** -k });
+      ry += rh;
+    }
+  }
+  const remDenom = 2 ** n;
+  return {
+    pieces,
+    remainder: { x: rx, y: ry, w: rw, h: rh, denom: remDenom, area: 1 / remDenom },
+    sumNumer: remDenom - 1,
+    sumDenom: remDenom,
+    sumValue: (remDenom - 1) / remDenom,
+  };
+}
+
+/* ───────── 正比例柠檬水配比：y = kx ───────── */
+export const proportionLevels = [
+  { name: '爸爸的黄金配方', targetLemons: 2, targetCups: 3, askLemons: 4, solutionCups: 6 },
+  { name: '酸爽冰柠茶', targetLemons: 3, targetCups: 3, askLemons: 5, solutionCups: 5 },
+  { name: '清淡夏日饮', targetLemons: 2, targetCups: 5, askLemons: 4, solutionCups: 10 },
+  { name: '派对大水壶', targetLemons: 3, targetCups: 4, askLemons: 6, solutionCups: 8 },
+];
+
+export function proportionCheck(level, lemons, cups) {
+  const crossDiff = cups * level.targetLemons - lemons * level.targetCups;
+  const sameRatio = crossDiff === 0;
+  const taste = sameRatio ? '一样好喝' : crossDiff < 0 ? '更酸一点' : '更淡一点';
+  return {
+    sameRatio,
+    taste,
+    unitCups: level.targetCups / level.targetLemons,
+    userUnitCups: cups / lemons,
+    partySolved: sameRatio && lemons === level.askLemons,
+  };
+}
+
+/* ───────── 棋盘麦粒：2n vs n² vs 2ⁿ⁻¹ ───────── */
+export function chessboardCount(square) {
+  const k = clamp(Math.round(square), 1, 64);
+  const grain = 2n ** BigInt(k - 1);
+  const total = (2n ** BigInt(k)) - 1n;
+  return { square: k, grain, total };
+}
+
+export function growthCompare(n) {
+  const k = clamp(Math.round(n), 1, 16);
+  return {
+    n: k,
+    linear: 2 * k,
+    quadratic: k * k,
+    exponential: 2 ** (k - 1),
+    expTotal: (2 ** k) - 1,
+  };
+}
+
+/* ───────── 爆炸圆点进制机（1 ← b 与 1 ← x） ───────── */
+export const initDots = (n, width = 5) => Array.from({ length: width }, (_, i) => (i === 0 ? Math.max(0, Math.round(n)) : 0));
+
+export function explodeStep(boxes, base) {
+  for (let i = 0; i < boxes.length - 1; i += 1) {
+    if (boxes[i] >= base) {
+      const next = [...boxes];
+      next[i] -= base;
+      next[i + 1] += 1;
+      return { boxes: next, explodedAt: i };
+    }
+  }
+  return null;
+}
+
+export function explodeAll(n, base, width = 6) {
+  let boxes = initDots(n, width);
+  const history = [boxes];
+  let step = explodeStep(boxes, base);
+  while (step) {
+    boxes = step.boxes;
+    history.push(boxes);
+    step = explodeStep(boxes, base);
+  }
+  return { boxes, steps: history.length - 1, history };
+}
+
+export const dotsValue = (boxes, base) => boxes.reduce((sum, c, i) => sum + c * (base ** i), 0);
+
+export function dotsPolyText(boxes) {
+  const terms = [];
+  for (let i = boxes.length - 1; i >= 0; i -= 1) {
+    if (!boxes[i]) continue;
+    const unit = i === 0 ? '' : i === 1 ? 'x' : `x${supText(i)}`;
+    terms.push([boxes[i], unit]);
+  }
+  return termsText(terms);
+}
+
+/* ───────── 弹跳小球：指数衰减 h₀ · rⁿ ───────── */
+export const bounceHeight = (h0, r, n) => h0 * (r ** n);
+
+export function bounceSeries(h0, r, count = 7) {
+  return Array.from({ length: count + 1 }, (_, n) => ({ n, h: bounceHeight(h0, r, n) }));
+}
+
+export function firstBounceBelow(h0, r, threshold = 1) {
+  for (let n = 0; n <= 30; n += 1) if (bounceHeight(h0, r, n) < threshold - 1e-9) return n;
+  return 30;
+}
+

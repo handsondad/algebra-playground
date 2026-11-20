@@ -18,8 +18,9 @@ test('每个问题都有画板和三轮对话，反过来也没有多余的', ()
   assert.deepEqual(Object.keys(labTalks).sort(), [...lessonIds].sort());
 });
 
-test('三步走：每一步都有展馆', () => {
-  assert.deepEqual([...new Set(halls.map(h => h.stage))], ['play', 'explore', 'challenge']);
+test('按学科内容分成六座展馆，每座都有问题', () => {
+  assert.deepEqual(halls.map(h => h.id), ['equations', 'expressions', 'inequalities', 'patterns', 'functions', 'exponents']);
+  for (const hall of halls) assert.ok(hall.lessons.length >= 3, hall.id);
 });
 
 test('首页轮播的入口都是真实的问题', () => {

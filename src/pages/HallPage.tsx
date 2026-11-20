@@ -6,7 +6,7 @@ import { Avatar } from "../components/Avatar";
 import { PageTop } from "../components/PageTop";
 import { TopicCard } from "../components/TopicCard";
 import { TalkCard, WikiCard, type AlgebraTalk, type WikiStory } from "../components/Stories";
-import { halls, stages, themeOf, topics, type Hall } from "../lib/catalog";
+import { halls, themeOf, topics, type Hall } from "../lib/catalog";
 import { useProgress } from "../lib/progress";
 import { href } from "../lib/route";
 import { isLine, useSpeaking } from "../lib/speech";
@@ -19,7 +19,6 @@ const hints = difficultyHint as Record<number, string>;
 
 export function HallPage({ hall }: { hall: Hall }) {
   const theme = themeOf(hall.id);
-  const stage = stages.find((item) => item.id === hall.stage)!;
   const { heard, lit } = useProgress();
   const speaking = useSpeaking();
   const list = topics.filter((topic) => topic.hall.id === hall.id);
@@ -34,7 +33,7 @@ export function HallPage({ hall }: { hall: Hall }) {
     <div className="page qlist" style={{ "--bubble": theme.hex } as CSSProperties}>
       <PageTop
         backHref={href.home} backLabel="六座展馆"
-        kicker={`${stage.emoji} ${stage.name} · ${list.length} 个问题 · 看过 ${seen} 个`}
+        kicker={`${list.length} 个问题 · 看过 ${seen} 个`}
         title={<><span aria-hidden="true">{theme.emoji}</span> {hall.name}</>}
       />
 

@@ -17,13 +17,9 @@ export type Lesson = {
   sources?: readonly Source[];
 };
 
-/** 三步走：先玩（play）、再动手试（explore）、最后闯关（challenge） */
-export type Stage = "play" | "explore" | "challenge";
-
 export type Hall = {
   id: string;
   name: string;
-  stage: Stage;
   summary: string;
   lessons: readonly Lesson[];
 };
@@ -39,12 +35,6 @@ export type Topic = Lesson & {
 export type Turn = { scene: readonly unknown[]; nian: string; dad: string };
 
 export const halls = rawHalls as unknown as readonly Hall[];
-
-export const stages: readonly { id: Stage; emoji: string; name: string; en: string; summary: string }[] = [
-  { id: "play", emoji: "🧩", name: "玩中学", en: "Play", summary: "不写 x，先用挂件和天平猜一猜、试一试。" },
-  { id: "explore", emoji: "🔬", name: "动手试", en: "Explore", summary: "拖瓷砖、喂机器、搭火柴，自己发现规律。" },
-  { id: "challenge", emoji: "🏆", name: "闯关测", en: "Challenge", summary: "调参数射激光、放弹珠、配卡片，一关一关过。" },
-];
 
 export const topics: readonly Topic[] = halls.flatMap((hall) =>
   hall.lessons.map((lesson) => ({

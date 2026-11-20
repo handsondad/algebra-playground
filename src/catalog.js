@@ -1,5 +1,6 @@
 /**
- * 代数游乐场的全部展馆和实验。三步走：play 玩中学 → explore 动手试 → challenge 闯关测。
+ * 代数游乐场的全部展馆和实验。按代数核心学科分支设 6 座展馆：
+ * 等式与方程、代数式与运算、不等式与规划、数列与规律、函数与图像、乘方指数与进制。
  * 每个 lesson 的 id 也是实验模块的 key（见 lab-modes.js）和问答脚本的 key（见 lab-talks.js）。
  */
 const polypad = ['Amplify Polypad · 天平与代数瓷砖', 'https://polypad.amplify.com/'];
@@ -8,24 +9,24 @@ const modelAlgebra = ['Math Playground · Model Algebra Equations', 'https://www
 const zogs = ['Math Playground · Save the Zogs', 'https://www.mathplayground.com/save_the_zogs.html'];
 const marbleLines = ['Desmos · Marbleslides: Lines', 'https://teacher.desmos.com/marbleslides-lines'];
 const marbleParabolas = ['Desmos · Marbleslides: Parabolas', 'https://teacher.desmos.com/marbleslides-parabolas'];
+const desmosCalc = ['Desmos · 图形计算器', 'https://www.desmos.com/calculator'];
 const visualPatterns = ['Visual Patterns · Fawn Nguyen', 'https://www.visualpatterns.org/'];
 const geogebra = ['GeoGebra · 代数资源', 'https://www.geogebra.org/math'];
+const phetEquality = ['PhET · Equality Explorer', 'https://phet.colorado.edu/en/simulations/equality-explorer-basics'];
+const phetBalancing = ['PhET · Balancing Act 杠杆平衡', 'https://phet.colorado.edu/en/simulations/balancing-act'];
+const phetArea = ['PhET · Area Model Algebra', 'https://phet.colorado.edu/en/simulations/area-model-algebra'];
+const phetProportion = ['PhET · Proportion Playground', 'https://phet.colorado.edu/en/simulations/proportion-playground'];
+const explodingDotsRef = ['Global Math Project · Exploding Dots', 'https://globalmathproject.org/exploding-dots/'];
 const mactutor = name => `https://mathshistory.st-andrews.ac.uk/Biographies/${name}/`;
+const mathworld = slug => `https://mathworld.wolfram.com/${slug}.html`;
 
 export const halls = [
-  { id: 'mobiles', name: '挂件谜题', stage: 'play', summary: '不写 x，只看挂件平不平：形状就是未知数。', lessons: [
+  { id: 'equations', name: '等式与方程', summary: '挂件、天平、竹笼与跷跷板：抓住「两边相等」，通过同加同减、消元和乘积平衡揪出未知数。', lessons: [
     { id: 'mobile-puzzle', name: '平衡挂件谜题', tag: '未知数 · 等量代换',
       intro: '天花板下挂着一串挂件，每种形状有一个秘密重量。只要每根横杆都平，总重又对得上，就猜中了。',
       idea: '横杆平了，就说明左右一样重：这就是一个等式。两边相同的形状可以一起拿掉，剩下的就是答案的线索。',
       question: '横杆左边挂「六边形 + 圆球」，右边挂「六边形 + 4」，而且是平的。圆球有多重？',
       choices: ['和六边形一样重', '4，因为两边的六边形抵消了', '没法知道，信息不够'], answer: 1, sources: [solveme] },
-    { id: 'number-trick', name: '读心数字魔术', tag: '代数式 · 化简',
-      intro: '想一个数，乘 2，加 6，除以 2，再减去你想的数。不管你想几，最后都是 3。爸爸怎么猜到的？',
-      idea: '把想的数装进一个口袋。乘 2 是两个口袋，加 6 是 6 颗弹珠，除以 2 剩一个口袋和 3 颗弹珠，减掉口袋只剩 3 颗。口袋里装几都没关系。',
-      question: '为什么不管想哪个数，结果都是 3？',
-      choices: ['因为大家想的数都差不多', '因为最后口袋被拿走了，只剩下和口袋无关的 3 颗弹珠', '因为 6 除以 2 正好等于 3，和步骤无关'], answer: 1, sources: [polypad] },
-  ] },
-  { id: 'balance', name: '天平解方程', stage: 'play', summary: '天平两边同时加、同时减、同时平分，它就一直平：这就是解方程。', lessons: [
     { id: 'balance-scale', name: '天平上的方程', tag: '一元一次方程',
       intro: '天平上放着几个装了秘密数字的 x 盒子和一些砝码。怎么拿，才能让一边只剩一个 x？',
       idea: '天平平着，说明两边相等。两边同时拿走一样的东西，天平还是平的。先把 x 拿到一边，再把砝码拿到另一边，最后平分。',
@@ -35,43 +36,121 @@ export const halls = [
       intro: '气球会往上拉，正好抵消一个砝码。天平上出现「x 减 3」，怎么把气球去掉？',
       idea: '一个气球加一个砝码，合起来就是 0。两边各放上同样多的砝码，把气球抵消掉，天平依旧平衡。这就是「移项要变号」的来历。',
       question: '左边是 x 和 3 个气球（x − 3），右边是 5 个砝码。两边各放 3 个砝码后，x 是多少？',
-      choices: ['2', '8', '15'], answer: 1, sources: [polypad] },
+      choices: ['2', '8', '15'], answer: 1, sources: [polypad, phetEquality] },
+    { id: 'chicken-rabbit', name: '鸡兔同笼：抬起两只脚', tag: '二元方程组 · 消元',
+      intro: '竹笼里有鸡也有兔，上面数有 8 个头，下面数有 22 只脚。吹一声哨子让每只动物抬起 2 只脚，会发生什么？',
+      idea: '设鸡 x 只、兔 y 只，就有 x + y = 8 和 2x + 4y = 22。每只抬起 2 只脚，相当于第二个式子减去第一个式子的 2 倍，小鸡的脚全消掉了，剩下的脚正好是 2y。',
+      question: '一共 8 个头、22 只脚。每只动物抬起 2 只脚后，地上还剩几只兔子的脚？',
+      choices: ['6 只脚，所以有 3 只兔子', '14 只脚，所以有 7 只兔子', '8 只脚，所以有 4 只兔子'], answer: 0,
+      sources: [['MacTutor · 刘徽与《九章算术》', mactutor('Liu_Hui')], phetEquality] },
+    { id: 'lever-balance', name: '阿基米德跷跷板', tag: '乘积等式 · 力矩平衡',
+      intro: '重重的大人坐得离支点近一点，轻巧的小朋友坐远一点，跷跷板照样能平！未知格数 x 怎么算？',
+      idea: '跷跷板看的是「重量 × 离支点的格数」（力矩）。左边乘积等于右边乘积时横杆水平：重一倍，距离就只要一半。',
+      question: '左边第 2 格放了重量 6 的包裹。右边重量 3 的小念坐第几格才能平衡？',
+      choices: ['第 2 格', '第 4 格，因为 6 × 2 = 3 × 4', '第 6 格'], answer: 1,
+      sources: [phetBalancing, ['MacTutor · 阿基米德', mactutor('Archimedes')]] },
   ] },
-  { id: 'tiles', name: '代数瓷砖', stage: 'explore', summary: '把乘法变成拼面积：x² 是大方块，x 是长条，1 是小方块。', lessons: [
+
+  { id: 'expressions', name: '代数式与运算', summary: '用口袋装未知数，用瓷砖和杨辉三角看乘法：化简、展开、平方差、因式分解和配方都清清楚楚。', lessons: [
+    { id: 'number-trick', name: '读心数字魔术', tag: '代数式 · 化简',
+      intro: '想一个数，乘 2，加 6，除以 2，再减去你想的数。不管你想几，最后都是 3。爸爸怎么猜到的？',
+      idea: '把想的数装进一个口袋。乘 2 是两个口袋，加 6 是 6 颗弹珠，除以 2 剩一个口袋和 3 颗弹珠，减掉口袋只剩 3 颗。口袋里装几都没关系。',
+      question: '为什么不管想哪个数，结果都是 3？',
+      choices: ['因为大家想的数都差不多', '因为最后口袋被拿走了，只剩下和口袋无关的 3 颗弹珠', '因为 6 除以 2 正好等于 3，和步骤无关'], answer: 1, sources: [polypad] },
     { id: 'tile-multiply', name: '拼出 (x + a)(x + b)', tag: '多项式乘法',
       intro: '一个长方形，长是 x + 2，宽是 x + 3。用瓷砖把它拼满，一共要哪几种、各几块？',
       idea: '长方形的面积 = 长 × 宽，也等于里面所有瓷砖加起来。1 块 x²，a + b 条 x，a × b 个小方块。换一个 x 的长度，块数不变。',
       question: '(x + 2)(x + 3) 拼出来，小方块 1 一共有几个？',
-      choices: ['5 个，2 + 3', '6 个，2 × 3', '9 个，3 × 3'], answer: 1, sources: [polypad] },
+      choices: ['5 个，2 + 3', '6 个，2 × 3', '9 个，3 × 3'], answer: 1, sources: [polypad, phetArea] },
     { id: 'tile-factor', name: '把瓷砖拼成长方形', tag: '因式分解',
       intro: '给你 1 块 x²、5 条 x、6 个小方块。能不能把它们拼成一个完整的长方形？',
       idea: 'x 条分一部分放右边、一部分放下边，角上就空出一个小长方形。角上要的小方块数正好等于两部分相乘。分得对，就严丝合缝。',
       question: 'x² + 5x + 6：把 5 条 x 分成右边 2 条、下边 3 条，角上需要几个小方块？',
       choices: ['5 个', '6 个，正好用完', '7 个'], answer: 1, sources: [polypad, geogebra] },
+    { id: 'diff-squares', name: '剪一刀拼出平方差', tag: '平方差公式 · 割补',
+      intro: '大正方形 a² 挖掉一个角 b²，剩下一块拐尺形。剪一刀挪过去，怎么一下就变成长方形了？',
+      idea: '把多出来的窄条 (a − b) × b 转过去接在旁边，长变成 a + b，宽还是 a − b，面积一分不少：a² − b² = (a + b)(a − b)。',
+      question: '用平方差公式心算 53² − 47²，等于多少？',
+      choices: ['36，因为 (53 − 47)²', '600，因为 (53 + 47) × (53 − 47) = 100 × 6', '1000'], answer: 1,
+      sources: [['Wolfram MathWorld · Difference of Squares', mathworld('DifferenceofSquares')], phetArea] },
     { id: 'complete-square', name: '花拉子米的补角', tag: '配方法',
       intro: '一千多年前，花拉子米要解「x² + 10x = 39」。他没用公式，而是把它画成一个缺了角的正方形。',
       idea: '把 10 条 x 平分到正方形的两边，各 5 条，角上缺 5 × 5 = 25。两边都补上 25，就拼成 (x + 5)² = 64，所以 x + 5 = 8，x = 3。',
       question: 'x² + 10x 拼成大正方形，角上要补几块小方块？',
       choices: ['10 块', '25 块', '100 块'], answer: 1, sources: [geogebra, ['MacTutor · 花拉子米', mactutor('Al-Khwarizmi')]] },
+    { id: 'yanghui-triangle', name: '杨辉三角与展开式', tag: '二项式系数 · (a+b)ⁿ',
+      intro: '(a + b)²、(a + b)³、(a + b)⁴ 展开后的系数，竟然全都整整齐齐排在一座数字金字塔里！',
+      idea: '金字塔里每个数都等于头顶左上、右上两数之和，因为乘上 (a + b) 时每一项都从上一行的两路汇合而来。第 n 行的数正好是 (a + b)ⁿ 的系数，整行加起来等于 2ⁿ。',
+      question: '杨辉三角第 3 行是 1, 3, 3, 1，那第 4 行中间最大的那个数是几？',
+      choices: ['4', '6，因为头顶两个 3 相加等于 6', '8'], answer: 1,
+      sources: [['Mathigon · Pascal’s Triangle', 'https://mathigon.org/course/sequences/pascals-triangle'], ['MacTutor · 杨辉', mactutor('Yang_Hui')]] },
   ] },
-  { id: 'machines', name: '规律机器', stage: 'explore', summary: '喂数字、搭火柴、数楼梯：先看规律，再写成式子。', lessons: [
-    { id: 'function-machine', name: '函数黑盒机器', tag: '一次函数 · 规则',
-      intro: '一台机器吃进一个数，吐出另一个数。不许打开机器，你能猜出它肚子里的规则吗？',
-      idea: '多喂几个相邻的数：x 每多 1，y 就多 a，这就是乘的那个数；放 0 进去吐出的就是加的那个数 b。两组输入输出就能把规则定下来。',
-      question: '放 0 吐出 1，放 1 吐出 3，放 2 吐出 5。机器的规则是？',
-      choices: ['y = x + 1', 'y = 2x + 1', 'y = 3x'], answer: 1, sources: [polypad] },
+
+  { id: 'inequalities', name: '不等式与规划', summary: '答案不再只是一个数，而是一条射线或一片安全区：看清乘负变号、半平面交集和顶点最优解。', lessons: [
+    { id: 'number-line-ineq', name: '数轴射灯与变号', tag: '一元一次不等式',
+      intro: 'x + 3 < 7 的答案不是一个数，而是数轴上一整条射线！可为什么两边同乘 −1 时，不等号一定要掉头？',
+      idea: '两边同加同减，数轴上的点整体平移，谁左谁右不变；但同乘 −1 就像照镜子关于 0 左右翻转，原来靠右的大数翻到了左边，所以不等号必须翻面。',
+      question: '把 −x < −2 两边同时乘 −1，会变成什么？',
+      choices: ['x < 2，符号不变', 'x > 2，关于 0 翻面后不等号也要掉头', 'x > −2'], answer: 1,
+      sources: [phetEquality, ['Wolfram MathWorld · Inequality', mathworld('Inequality')]] },
+    { id: 'half-plane-radar', name: '探照灯围宝藏', tag: '二元一次不等式组',
+      intro: '坐标格子里有黄宝石也有黑地雷。调好两道直线探照灯，用它们的绿色重叠区把宝石全围住！',
+      idea: '一条直线把平面切成两半：y ≥ mx + b 是直线上方，y ≤ mx + b 是直线下方。两个不等式同时成立的地方，就是两片半平面的重叠区域。',
+      question: '想表示直线 y = x + 2 下方（含直线本身）的那一半平面，应该写哪个式子？',
+      choices: ['y ≤ x + 2', 'y ≥ x + 2', 'y = x + 2'], answer: 0,
+      sources: [desmosCalc, ['OpenStax · Graphing Systems of Linear Inequalities', 'https://openstax.org/books/elementary-algebra-2e/pages/5-6-graphing-systems-of-linear-inequalities']] },
+    { id: 'pocket-budget', name: '零花钱采购计划', tag: '线性规划 · 顶点最优',
+      intro: '零花钱只有 18 元，书包最多装 7 件。画册和彩笔各买几件，拿到的赠品贴纸最多？',
+      idea: '每条限制都在第一象限切出一块多边形「可行域」。把等分目标线平行往右上推，离开可行域前最后碰到的那个尖角（顶点），就是最优方案。',
+      question: '在 2x + 3y ≤ 18 且 x + y ≤ 7 下，想让 3x + 4y 最大，最优方案落在哪个交点上？',
+      choices: ['(0, 6)，得 24 张', '(3, 4)，两条限制线的交点，得 25 张', '(7, 0)，得 21 张'], answer: 1,
+      sources: [['MacTutor · 丹齐格与线性规划', mactutor('Dantzig_George')], geogebra] },
+  ] },
+
+  { id: 'patterns', name: '数列与规律', summary: '搭火柴、包拐尺、拼楼梯、排兔子正方形、切蛋糕：从图形里看出通项、递推与无穷级数。', lessons: [
     { id: 'matchstick-pattern', name: '火柴棒长图案', tag: '找规律 · 代数式',
       intro: '用火柴棒拼一排正方形：1 个要 4 根，2 个要 7 根，3 个要 10 根。拼 100 个要几根？',
       idea: '先放开头的 1 根，每多一个正方形只要再添 3 根（上、下、右）。第 n 个就是 1 + 3n 根，不用一个个数。',
       question: '一排 n 个正方形要几根火柴？',
       choices: ['4n 根', '1 + 3n 根', '3 + n 根'], answer: 1, sources: [visualPatterns] },
+    { id: 'odd-squares', name: '奇数拐尺拼正方形', tag: '形数 · 奇数求和',
+      intro: '1 + 3 = 4，1 + 3 + 5 = 9，1 + 3 + 5 + 7 = 16……为什么从 1 开始连续加奇数，每次都正好是平方数？',
+      idea: '边长 k − 1 的正方形外圈包上一层 L 形拐尺，横着添 k 块、竖着添 k 块，扣掉角上共用的 1 块，刚好是 2k − 1 块。包 n 层就是 n × n 的大正方形。',
+      question: '从 1 开始把前 10 个连续奇数加起来（1 + 3 + 5 + … + 19），和是多少？',
+      choices: ['90', '100，正好是 10 × 10 的正方形', '121'], answer: 1,
+      sources: [['Mathigon · Figurate Numbers', 'https://mathigon.org/course/sequences/figurate'], ['Wolfram MathWorld · Figurate Number', mathworld('FigurateNumber')]] },
     { id: 'gauss-staircase', name: '高斯的楼梯', tag: '求和 · 公式',
       intro: '传说小高斯一眨眼就算出 1 + 2 + … + 100。用积木搭一座楼梯，看看他用了什么妙招。',
       idea: '再拿一座一样的楼梯倒过来拼上，正好拼成一个 n × (n + 1) 的长方形。一座楼梯是它的一半：n(n + 1) ÷ 2。',
       question: '两座 5 级楼梯拼成的长方形是几乘几？',
       choices: ['5 × 5', '5 × 6', '6 × 6'], answer: 1, sources: [['MacTutor · 高斯', mactutor('Gauss')]] },
+    { id: 'fibonacci-spiral', name: '兔子数列与黄金长方形', tag: '递推规律 · 斐波那契',
+      intro: '边长 1, 1, 2, 3, 5, 8……每个新正方形的边长都是前两个相加，为什么总能不留缝地拼成大长方形？',
+      idea: '因为前两个正方形拼好后，长边正好等于两数之和 Fₙ = Fₙ₋₁ + Fₙ₋₂，新正方形贴上去严丝合缝。越往外拼，长宽比越接近黄金比 1.618。',
+      question: '按 1, 1, 2, 3, 5, 8 往下排，下一个正方形的边长应该是几？',
+      choices: ['11', '13，因为 5 + 8 = 13', '16'], answer: 1,
+      sources: [['Mathigon · Fibonacci Numbers', 'https://mathigon.org/course/sequences/fibonacci'], ['MacTutor · 斐波那契', mactutor('Fibonacci')]] },
+    { id: 'halving-square', name: '切半正方形：无穷求和', tag: '等比级数 · 极限直觉',
+      intro: '一块面积为 1 的正方形蛋糕，先吃掉 1/2，再吃掉剩下的一半 1/4，再吃 1/8……一直加下去会超过 1 吗？',
+      idea: '每次都只拿走剩余部分的一半，切 n 次后右下角还留着 1/2ⁿ 没动，所以吃掉的总和就是 1 − 1/2ⁿ。无限切下去，剩下的缩成 0，总和无限逼近 1。',
+      question: '1/2 + 1/4 + 1/8 + 1/16 + 1/32 加起来等于多少？',
+      choices: ['31/32，因为整块 1 还剩 1/32 没涂', '1', '15/16'], answer: 0,
+      sources: [['Wolfram MathWorld · Geometric Series', mathworld('GeometricSeries')], explodingDotsRef] },
   ] },
-  { id: 'lines', name: '直线闯关', stage: 'challenge', summary: '调斜率、调截距：一条直线 y = mx + b 救外星人、比存钱。', lessons: [
+
+  { id: 'functions', name: '函数与图像', summary: '一条规则就是一个函数：调柠檬水、喂黑盒、射激光、放弹珠，把式子、图像与表格连成一家。', lessons: [
+    { id: 'proportion-mix', name: '柠檬水配比实验室', tag: '正比例 · y = kx',
+      intro: '爸爸的标准杯是 2 颗柠檬配 3 杯水。周末派对要用 4 颗柠檬调一大壶，倒几杯水味道才一模一样？',
+      idea: '味道一样，说明「水 ÷ 柠檬」的比值 k 不变，也就是 y = kx。画在坐标图上，所有味道一样的配方都排成一条穿过原点 (0, 0) 的直线。',
+      question: '标准杯是 2 颗柠檬配 3 杯水。用 6 颗柠檬调同样口味，要倒几杯水？',
+      choices: ['7 杯水', '9 杯水，柠檬变 3 倍，水也变 3 倍', '12 杯水'], answer: 1,
+      sources: [phetProportion] },
+    { id: 'function-machine', name: '函数黑盒机器', tag: '一次函数 · 规则',
+      intro: '一台机器吃进一个数，吐出另一个数。不许打开机器，你能猜出它肚子里的规则吗？',
+      idea: '多喂几个相邻的数：x 每多 1，y 就多 a，这就是乘的那个数；放 0 进去吐出的就是加的那个数 b。两组输入输出就能把规则定下来。',
+      question: '放 0 吐出 1，放 1 吐出 3，放 2 吐出 5。机器的规则是？',
+      choices: ['y = x + 1', 'y = 2x + 1', 'y = 3x'], answer: 1,
+      sources: [['PhET · Function Builder', 'https://phet.colorado.edu/en/simulations/function-builder'], polypad] },
     { id: 'laser-rescue', name: '激光救援外星人', tag: '斜率 · 截距',
       intro: '外星人被困在坐标格子上。调好激光炮的斜率 m 和截距 b，一道直线激光把它们全部救下！',
       idea: '截距 b 是激光炮装在 y 轴上的位置，斜率 m 是往右走 1 格升高几格。两个点就能决定一条直线，所以先对准两个外星人。',
@@ -82,8 +161,6 @@ export const halls = [
       idea: '每人的钱都是一条直线。两条线相交的那一点，横坐标是第几周，纵坐标是一样多的钱。平行的两条线，永远不会相交。',
       question: '如果表姐也是每周存 2 元，两条线会怎样？',
       choices: ['在第 4 周相交', '平行，永远差 8 元', '重合在一起'], answer: 1, sources: [geogebra] },
-  ] },
-  { id: 'curves', name: '曲线闯关', stage: 'challenge', summary: '让弹珠顺着函数图像滚下来吃星星，再把式子、图像、表格配成一组。', lessons: [
     { id: 'marble-slides', name: '弹珠滑梯', tag: '抛物线 · 顶点式',
       intro: '弹珠会沿着函数图像滚。调好 a、h、k，让它一路吃掉所有星星，还要绕开砖墙。',
       idea: '顶点式 y = a(x − h)² + k 里，h 让顶点左右挪，k 让顶点上下挪，a 管开口朝向和胖瘦：a 是负数时开口朝下。',
@@ -93,6 +170,27 @@ export const halls = [
       intro: '一个函数可以写成式子、画成图像、列成表格。12 张卡片打乱了，你能把同一个函数的三张找到一起吗？',
       idea: '先找最好认的：x = 0 时 y 是几（图像和 y 轴的交点）；再看 x 每多 1，y 变多少（倾斜程度）。弯的图像一定配带 x² 的式子。',
       question: '表格写着 x = 0, 1, 2 时 y = 3, 3, 3。它配哪张图像？',
-      choices: ['一条往右上升的直线', '一条水平的直线', '一条开口朝上的抛物线'], answer: 1, sources: [['Desmos · 图形计算器', 'https://www.desmos.com/calculator']] },
+      choices: ['一条往右上升的直线', '一条水平的直线', '一条开口朝上的抛物线'], answer: 1, sources: [desmosCalc] },
+  ] },
+
+  { id: 'exponents', name: '乘方、指数与进制', summary: '每次翻倍的麦粒、满 b 就爆炸的圆点盒、越跳越矮的小球：看懂幂、位值制与指数变化。', lessons: [
+    { id: 'wheat-chessboard', name: '棋盘上的麦粒', tag: '乘方 · 指数爆炸 2ⁿ',
+      intro: '第 1 格放 1 颗麦粒，第 2 格 2 颗，第 3 格 4 颗，每走一格翻一倍。一开始不起眼，走到后面有多吓人？',
+      idea: '每次加 2 是直线增长 2n，边长变大是平方增长 n²，而每次乘 2 是指数增长 2ⁿ⁻¹。而且前 n 格加起来恰好等于 2ⁿ − 1，总比下一格少 1 颗。',
+      question: '第 1 格 1 颗、第 2 格 2 颗、第 3 格 4 颗……前 5 格的麦粒全部加起来是多少颗？',
+      choices: ['16 颗', '31 颗，也就是 2⁵ − 1（比第 6 格的 32 颗少 1）', '25 颗'], answer: 1,
+      sources: [['Mathigon · Exponential Functions', 'https://mathigon.org/course/exponentials/carbon-dating'], ['Wolfram MathWorld · Wheat and Chessboard Problem', mathworld('WheatandChessboardProblem')]] },
+    { id: 'exploding-dots', name: '爆炸圆点进制机', tag: '二进制 · 位值多项式',
+      intro: '「1 ← 2」机器里，同一个盒子里每满 2 颗圆点就爆炸变成左边 1 颗！放进 13 颗圆点，炸完剩什么？',
+      idea: '从右往左每个盒子的权重是 1, b, b², b³……满 b 进 1 就是 b 进制；如果把进位基数换成未知数 x，盒子里的圆点就写成了多项式！',
+      question: '在「1 ← 2」二进制机器的最右格放进 5 颗圆点，全部炸完后从左到右读出什么？',
+      choices: ['101，因为 4 + 0 + 1 = 5', '110，因为 4 + 2 = 6', '21'], answer: 0,
+      sources: [explodingDotsRef, ['Mathigon · Codes and Ciphers', 'https://mathigon.org/course/codes/introduction']] },
+    { id: 'bouncing-decay', name: '弹跳小球的高度', tag: '指数衰减 · h₀rⁿ',
+      intro: '皮球从 8 米高松手，每次弹起的高度都是上一次的一半（0.5 倍）。弹几次会低于 1 米？',
+      idea: '每次乘同一个小于 1 的比例 r，第 n 次高度就是 h₀ × rⁿ。它和「每次减 2 米」不同：越往后减得越少，步步逼近地面却不会变成负数。',
+      question: '从 8 米高落下，每次弹起上一次的一半（r = 0.5）。第 3 次弹起有多高？',
+      choices: ['2 米', '1 米，因为 8 × 0.5 × 0.5 × 0.5 = 1', '0 米'], answer: 1,
+      sources: [['Mathigon · Exponential Decay', 'https://mathigon.org/course/exponentials/carbon-dating'], desmosCalc] },
   ] },
 ];

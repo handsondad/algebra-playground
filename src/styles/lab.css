@@ -110,7 +110,8 @@
 
 /* 画板上可以点的东西 */
 .hotspot { cursor: pointer; outline: none; }
-.hotspot:focus-visible .card-bg { stroke: #1d4ed8; stroke-width: 4; }
+.hotspot:focus-visible :is(.card-bg, .yh-cell, .gnomon-cell, .dot-box) { stroke: #1d4ed8; stroke-width: 4; }
+.hotspot:focus-visible .hit { stroke: #1d4ed8; stroke-width: 2.5; }
 
 /* 操作台 */
 .control-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-block: 8px; }
@@ -167,9 +168,14 @@
   .tile-label, .tile-ruler-label, .tile-note, .mobile-label, .trick-bag-label, .trick-empty, .trick-expr, .trick-calc,
   .scale-x-label, .scale-unit-label, .scale-balloon-label, .scale-verdict, .machine-rule, .machine-ball-label,
   .machine-tag, .machine-cell, .match-cell, .match-step, .match-rule, .stair-label, .plane-tick,
-  .card-head, .card-eq, .card-th, .card-td, .alien-check
+  .card-head, .card-eq, .card-th, .card-td, .alien-check,
+  .cage-head, .cage-verdict, .lever-num, .lever-weight, .lever-eq, .lever-sub,
+  .ds-hole-label, .ds-part-label, .yh-val, .yh-formula,
+  .ineq-big, .ineq-sub, .ineq-mirror-label, .ineq-tip, .radar-mine-x,
+  .fib-label, .half-label, .half-rem-label, .mix-item, .mix-verdict, .mix-eq,
+  .chess-val, .growth-num, .exp-banner, .dot-digit
 ) { text-anchor: middle; }
-.board :is(.mobile-win, .laser-eq, .line-name, .plane-tick.is-y) { text-anchor: end; }
+.board :is(.mobile-win, .laser-eq, .line-name, .plane-tick.is-y, .decay-tag) { text-anchor: end; }
 .board :is(.machine-tag.is-left, .machine-cell.is-empty) { text-anchor: start; }
 
 /* 平衡挂件 */
@@ -355,6 +361,163 @@
 .board .card-th { font: 800 18px var(--mono); fill: #9d174d; }
 .board .card-td { font: 700 18px var(--mono); fill: #1f2937; }
 .board .card-check { font-size: 18px; fill: #15803d; text-anchor: middle; }
+
+/* 鸡兔同笼与阿基米德跷跷板 */
+.cage-box { fill: #fffbeb; stroke: #d97706; stroke-width: 2.2; stroke-dasharray: 7 4; }
+.cage-floor { stroke: #a8a29e; stroke-width: 2; }
+.cage-chick { fill: #fde047; stroke: #ca8a04; stroke-width: 2; }
+.cage-comb { fill: #ef4444; stroke: #b91c1c; stroke-width: 1.4; }
+.cage-beak { fill: #f97316; stroke: #c2410c; stroke-width: 1.2; }
+.cage-rabbit { fill: #fbcfe8; stroke: #db2777; stroke-width: 2; }
+.cage-ear { fill: #fce7f3; stroke: #db2777; stroke-width: 1.8; }
+.cage-eye { fill: #1f2937; }
+.cage-leg { stroke: #78350f; stroke-width: 2.6; stroke-linecap: round; }
+.cage-leg.is-up { stroke: #9ca3af; stroke-dasharray: 3 2; }
+.cage-leg.is-ground { stroke: #be185d; stroke-width: 3.2; }
+.board .cage-head { font-size: 15px; fill: #92400e; }
+.board .cage-verdict { font-size: 15px; fill: #b45309; }
+.board .cage-verdict.is-win { fill: #15803d; font-size: 16px; }
+
+.lever-fulcrum { fill: #d6d3d1; stroke: #57534e; stroke-width: 2.4; stroke-linejoin: round; }
+.lever-beam { stroke: #78350f; stroke-width: 10; stroke-linecap: round; }
+.lever-beam.is-tilted { stroke: #b45309; }
+.lever-beam.is-level { stroke: #15803d; }
+.lever-tick { stroke: #57534e; stroke-width: 2; }
+.board .lever-num { font: 700 12px var(--mono); fill: #57534e; stroke-width: 2px; }
+.lever-block { stroke-width: 2.2; }
+.lever-block.is-left { fill: #bfdbfe; stroke: #1d4ed8; }
+.lever-block.is-fixed { fill: #e9d5ff; stroke: #7e22ce; }
+.lever-block.is-mover { fill: #fcd34d; stroke: #b45309; }
+.board .lever-weight { font: 800 16px var(--mono); fill: #1f2937; stroke-width: 0; }
+.board .lever-eq { font: 800 19px var(--mono); fill: #92400e; }
+.board .lever-eq.is-win { fill: #15803d; }
+.board .lever-sub { font-size: 15px; fill: #57534e; }
+
+/* 平方差割补与杨辉三角 */
+.ds-main { fill: #93c5fd; stroke: #1d4ed8; stroke-width: 2; }
+.ds-strip { fill: #86efac; stroke: #15803d; stroke-width: 2; }
+.ds-cut { stroke: #b91c1c; stroke-width: 2.6; stroke-dasharray: 6 4; }
+.board .ds-hole-label { font: 700 14px var(--mono); fill: #b45309; }
+.board .ds-part-label { font: 700 14px var(--mono); fill: #1e3a8a; }
+
+.yh-cell { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.8; transition: fill .15s, stroke .15s; }
+.yh-cell.is-row { fill: #dbeafe; stroke: #3b82f6; stroke-width: 2.4; }
+.yh-cell.is-parent { fill: #fef3c7; stroke: #d97706; stroke-width: 2.8; }
+.yh-cell.is-pick { fill: #fde047; stroke: #b45309; stroke-width: 3.2; }
+.yh-cell.is-odd { fill: #c4b5fd; stroke: #6d28d9; stroke-width: 2.2; }
+.yh-link { stroke: #d97706; stroke-width: 2.8; stroke-dasharray: 5 3; }
+.board .yh-val { font: 800 15px var(--mono); fill: #1e293b; stroke-width: 0; }
+.board .yh-side { font: 700 13px var(--mono); fill: #64748b; }
+.board .yh-side.is-on { fill: #1d4ed8; font-size: 14.5px; }
+.yh-banner { fill: #eff6ff; stroke: #93c5fd; stroke-width: 2; }
+.board .yh-formula { font: 800 16px var(--mono); fill: #1e3a8a; }
+
+/* 不等式与规划 */
+.ineq-axis { stroke: #334155; stroke-width: 2.6; }
+.ineq-tick { stroke: #475569; stroke-width: 1.8; }
+.ineq-band { fill: #34d399; fill-opacity: .22; }
+.ineq-ray { stroke: #059669; stroke-width: 5; stroke-linecap: round; }
+.ineq-arrow { fill: #059669; stroke: none; }
+.ineq-end.is-closed { fill: #059669; stroke: #fff; stroke-width: 2.4; }
+.ineq-end.is-open { fill: #fff; stroke: #059669; stroke-width: 3.4; }
+.ineq-test { fill: #e2e8f0; stroke: #94a3b8; stroke-width: 1.6; }
+.ineq-test.is-ok { fill: #4ade80; stroke: #15803d; stroke-width: 2; }
+.ineq-mirror { stroke: #94a3b8; stroke-width: 1.8; stroke-dasharray: 5 5; }
+.ineq-mirror.is-on { stroke: #db2777; stroke-width: 3.2; }
+.board .ineq-mirror-label { font-size: 13px; fill: #db2777; }
+.board .ineq-big { font: 800 24px var(--mono); fill: #0f766e; }
+.board .ineq-big.is-win { fill: #15803d; }
+.board .ineq-sub { font-size: 14.5px; fill: #475569; }
+.board .ineq-sub.is-warn { fill: #be185d; }
+.board .ineq-tip { font-size: 14.5px; fill: #0f766e; }
+
+.radar-half.is-a { fill: #60a5fa; fill-opacity: .14; stroke: none; }
+.radar-half.is-b { fill: #f472b6; fill-opacity: .14; stroke: none; }
+.radar-both { fill: #34d399; fill-opacity: .34; stroke: #059669; stroke-width: 1.8; stroke-dasharray: 5 4; }
+.radar-gem-body { fill: #fde047; stroke: #ca8a04; stroke-width: 2; }
+.radar-gem.is-got .radar-gem-body { fill: #fef08a; stroke: #15803d; stroke-width: 2.4; }
+.radar-mine-body { fill: #334155; stroke: #0f172a; stroke-width: 2; }
+.radar-danger { fill: #fca5a5; fill-opacity: .65; stroke: #dc2626; stroke-width: 2; }
+.board .radar-mine-x { font: 800 13px var(--mono); fill: #fff; stroke-width: 0; }
+
+.budget-region { fill: #a7f3d0; fill-opacity: .38; stroke: #059669; stroke-width: 2; }
+.budget-iso { fill: none; stroke: #d97706; stroke-width: 2.8; stroke-dasharray: 7 5; }
+.budget-dot { fill: #059669; stroke: #fff; stroke-width: 1.6; }
+.budget-dot.is-pick { fill: #facc15; stroke: #b45309; stroke-width: 2.8; }
+.budget-dot.is-bad { fill: #ef4444; stroke: #fff; stroke-width: 2.2; }
+
+/* 奇数拐尺、斐波那契与切半正方形 */
+.gnomon-cell { stroke: #fff; stroke-width: 1.5; }
+.gnomon-cell.is-l1 { fill: #fde047; }
+.gnomon-cell.is-l2 { fill: #93c5fd; }
+.gnomon-cell.is-l3 { fill: #86efac; }
+.gnomon-cell.is-l4 { fill: #f9a8d4; }
+.gnomon-cell.is-l5 { fill: #c4b5fd; }
+.gnomon-cell.is-l6 { fill: #fdba74; }
+.gnomon-cell.is-focus { stroke: #1e293b; stroke-width: 2.6; }
+.gnomon-cell.is-tri-a { fill: #6ee7b7; stroke: #047857; }
+.gnomon-cell.is-tri-b { fill: #fcd34d; stroke: #b45309; }
+
+.fib-sq { stroke: #334155; stroke-width: 1.8; }
+.fib-sq.is-c0 { fill: #fef08a; }
+.fib-sq.is-c1 { fill: #bae6fd; }
+.fib-sq.is-c2 { fill: #bbf7d0; }
+.fib-sq.is-c3 { fill: #fbcfe8; }
+.fib-sq.is-c4 { fill: #ddd6fe; }
+.fib-sq.is-c5 { fill: #fed7aa; }
+.fib-arc { fill: none; stroke: #b45309; stroke-width: 3.4; stroke-linecap: round; }
+.board .fib-label { font: 800 14px var(--mono); fill: #1e293b; }
+
+.half-frame { fill: #fff; stroke: #334155; stroke-width: 2.4; }
+.half-piece { stroke: #fff; stroke-width: 2; }
+.half-piece.is-c0 { fill: #93c5fd; }
+.half-piece.is-c1 { fill: #86efac; }
+.half-piece.is-c2 { fill: #fde047; }
+.half-piece.is-c3 { fill: #f9a8d4; }
+.half-piece.is-c4 { fill: #c4b5fd; }
+.half-piece.is-c5 { fill: #fdba74; }
+.half-rem { fill: #f8fafc; stroke: #d97706; stroke-width: 2.4; stroke-dasharray: 5 3; }
+.board .half-label { font: 800 15px var(--mono); fill: #1e293b; }
+.board .half-rem-label { font: 700 12.5px var(--mono); fill: #b45309; }
+
+/* 正比例柠檬水 */
+.mix-jar { fill: #f8fafc; stroke: #64748b; stroke-width: 2.4; }
+.mix-handle { fill: none; stroke: #64748b; stroke-width: 3.5; stroke-linecap: round; }
+.mix-liquid.is-match { fill: #fde047; fill-opacity: .75; }
+.mix-liquid.is-sour { fill: #facc15; fill-opacity: .95; }
+.mix-liquid.is-light { fill: #bae6fd; fill-opacity: .65; }
+.board .mix-item { font: 700 13px var(--mono); fill: #334155; }
+.board .mix-verdict { font-size: 15px; fill: #b45309; }
+.board .mix-verdict.is-win { fill: #15803d; }
+.board .mix-eq { font: 800 16px var(--mono); fill: #1d4ed8; }
+.mix-origin { fill: #475569; }
+.mix-dot.is-std { fill: #2563eb; stroke: #fff; stroke-width: 2; }
+
+/* 乘方、指数与进制 */
+.chess-sq { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.6; }
+.chess-sq.is-done { fill: #fef9c3; stroke: #eab308; }
+.chess-sq.is-on { fill: #fde047; stroke: #b45309; stroke-width: 2.8; }
+.board .chess-idx { font: 700 11px var(--mono); fill: #64748b; stroke-width: 0; }
+.board .chess-val { font: 800 14px var(--mono); fill: #78350f; }
+.growth-bar.is-lin { fill: #93c5fd; stroke: #1d4ed8; stroke-width: 1.8; }
+.growth-bar.is-quad { fill: #86efac; stroke: #15803d; stroke-width: 1.8; }
+.growth-bar.is-exp { fill: #fb923c; stroke: #c2410c; stroke-width: 2; }
+.board .growth-num { font: 800 13px var(--mono); fill: #1e293b; }
+.board .exp-banner { font: 800 15.5px var(--mono); fill: #7c2d12; }
+
+.dot-box { fill: #fffdf9; stroke: #94a3b8; stroke-width: 2.2; }
+.dot-box.is-ready { fill: #fff7ed; stroke: #ea580c; stroke-width: 2.8; stroke-dasharray: 6 3; }
+.dot-box.is-boom { fill: #fef9c3; stroke: #ca8a04; stroke-width: 3; }
+.exp-dot { fill: #6366f1; stroke: #312e81; stroke-width: 1.6; }
+.exp-dot.is-hot { fill: #f97316; stroke: #9a3412; }
+.board .dot-digit { font: 800 22px var(--mono); fill: #312e81; }
+
+.decay-arc { fill: none; stroke: #f97316; stroke-width: 2; stroke-dasharray: 5 4; stroke-opacity: .75; }
+.decay-curve { fill: none; stroke: #ea580c; stroke-width: 3.4; stroke-linecap: round; }
+.decay-bar { stroke: #fed7aa; stroke-width: 3; }
+.decay-ball { fill: #fb923c; stroke: #9a3412; stroke-width: 2.2; }
+.decay-threshold { stroke: #16a34a; stroke-width: 2; stroke-dasharray: 6 4; }
+.board .decay-tag { font: 700 12.5px var(--mono); fill: #15803d; }
 
 @media (max-width: 920px) {
   .wiki-grid, .progress-grid, .talk-list { grid-template-columns: 1fr; }

@@ -5,7 +5,7 @@ import { Bubble } from "../components/Bubble";
 import { PageTop } from "../components/PageTop";
 import { actTitle } from "../components/QuestionFilm";
 import { MissingPage } from "./QuestionPage";
-import { halls, stages, themeOf, topicById, topics, turnsFor, type Topic } from "../lib/catalog";
+import { halls, themeOf, topicById, topics, turnsFor, type Topic } from "../lib/catalog";
 import { markLit, storageNotice, useProgress } from "../lib/progress";
 import { href } from "../lib/route";
 import { useLab } from "../lib/useLab";
@@ -154,29 +154,21 @@ function PlayIndex() {
       <PageTop backHref={href.home} backLabel="首页" kicker={`${topics.length} 块画板 · 已点亮 ${lit.size}`} title="🧪 动手游乐场" />
       <div className="qlist-intro">
         <p><b>小念：</b>爸爸讲完了，我能自己试试吗？</p>
-        <p><b>爸爸：</b>当然！先在「玩中学」里猜挂件、摆天平，再到「动手试」里拼瓷砖、喂机器，最后去「闯关测」调参数过关。答对小挑战就能点亮它。</p>
+        <p><b>爸爸：</b>当然！每块画板都在真的计算：放砝码、拼瓷砖、搭火柴、调斜率，看看哪些数变了、哪些数一直不变。答对小挑战就能点亮它。</p>
       </div>
-      {stages.map((stage, step) => (
-        <section key={stage.id} className={`play-stage is-${stage.id}`} aria-label={stage.name}>
-          <h2 className="play-stage-title">
-            <span className="home-stage-step" aria-hidden="true">{step + 1}</span>
-            {stage.emoji} {stage.name} <small>{stage.en} · {stage.summary}</small>
-          </h2>
-          {halls.filter((hall) => hall.stage === stage.id).map((hall) => {
-            const list = topics.filter((topic) => topic.hall.id === hall.id);
-            const theme = themeOf(hall.id);
-            return (
-              <div key={hall.id} className="play-group">
-                <h3>
-                  <span aria-hidden="true">{theme.emoji}</span> {hall.name}
-                  <small>{list.filter((topic) => lit.has(topic.id)).length} / {list.length}</small>
-                </h3>
-                <div className="play-cards">{list.map((topic) => <PlayCard key={topic.id} topic={topic} />)}</div>
-              </div>
-            );
-          })}
-        </section>
-      ))}
+      {halls.map((hall) => {
+        const list = topics.filter((topic) => topic.hall.id === hall.id);
+        const theme = themeOf(hall.id);
+        return (
+          <section key={hall.id} className="play-group" aria-label={hall.name}>
+            <h2>
+              <span aria-hidden="true">{theme.emoji}</span> {hall.name}
+              <small>{list.filter((topic) => lit.has(topic.id)).length} / {list.length}</small>
+            </h2>
+            <div className="play-cards">{list.map((topic) => <PlayCard key={topic.id} topic={topic} />)}</div>
+          </section>
+        );
+      })}
     </div>
   );
 }
