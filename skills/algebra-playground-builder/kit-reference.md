@@ -55,7 +55,8 @@ export function myLab({ board, controls, stats, guide, records, lesson, signal, 
 - `src/components/Avatar.tsx`：`<Avatar who="nian" | "dad" />`，与系列其他项目一致的小念 / 爸爸头像。
 - `src/components/Bubble.tsx`：`<Bubble who index speaking>` 对话气泡，小念在右、爸爸在左，正在说话时高亮。
 - `src/lib/speech.ts`：`useSpeaking()`、`useSound()`、`isLine(line, who, text)`。
-- `src/speech.js`：`say(...lines)` / `stopSpeaking()` / `chime(true | false)`，优先播放 `public/voice/clips/*.mp3`，找不到时回退到浏览器中文语音。清单键是 `"who|text"`，文件名是它的 sha256 前 12 位。
+- `src/speech.js`：`say(...lines)` / `stopSpeaking()` / `chime(true | false)`，优先播放 `public/voice/clips/*.mp3`，找不到时回退到浏览器中文语音。清单键是 `"who|text"`，文件名是它的 sha256 前 12 位；清单按需加载，播一句时预取下一句。自动朗读前先看 `getSound()`，声音关着就只展开、不出声。
+- `src/voice-lines.js`：全站配音台词的唯一清单 `voiceLines()`（`npm run voice` 与 `npm run check` 都读它），以及页面朗读要用的 `wikiSpoken(story)`、`talkLines(talk)`。新增会朗读的台词类型时只改这里。
 - `src/question-catalog.js`：`challengeHint` 与 `challengeCheer(lesson)` 是游乐场小挑战的两句固定台词；改文字后要重跑 `npm run voice`。
 
 ---

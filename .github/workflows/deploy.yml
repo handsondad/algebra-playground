@@ -26,6 +26,9 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm test
+      # 无头浏览器全站巡检（runner 自带 Chrome）；装中文字体，手机宽度的溢出检查才和真机一致
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
+      - run: npm run smoke
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

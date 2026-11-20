@@ -12,38 +12,10 @@ VOICES = {
     "dad": ("zh-CN-YunxiNeural", "-5%"),
 }
 
+# 台词清单只在 src/voice-lines.js 里维护一份
 NODE_COLLECT = r"""
-import { halls } from './src/catalog.js';
-import { hallChats, algebraWiki, algebraTalks } from './src/algebra-story-data.js';
-import { labTalks } from './src/lab-talks.js';
-import { challengeCheer, challengeHint } from './src/question-catalog.js';
-
-const items = [];
-const add = (who, text) => {
-  const clean = String(text ?? '').trim();
-  if (clean) items.push({ who, text: clean });
-};
-
-for (const [n, d] of Object.values(hallChats)) { add('nian', n); add('dad', d); }
-for (const w of algebraWiki) {
-  add('dad', `${w.scientist}的故事：${w.title}。${w.story} ${w.homeLab}`);
-}
-for (const t of algebraTalks) {
-  for (const turn of t.turns) { add('nian', turn.nian); add('dad', turn.dad); }
-  add('nian', t.wrap);
-}
-for (const turns of Object.values(labTalks)) {
-  for (const turn of turns) { add('nian', turn.nian); add('dad', turn.dad); }
-}
-for (const hall of halls) {
-  for (const l of hall.lessons) {
-    add('nian', challengeCheer(l));
-    add('dad', l.idea);
-  }
-}
-add('dad', challengeHint);
-
-console.log(JSON.stringify(items));
+import { voiceLines } from './src/voice-lines.js';
+console.log(JSON.stringify(voiceLines()));
 """
 
 

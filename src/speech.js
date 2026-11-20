@@ -1,4 +1,11 @@
-import { voiceManifest } from './voice-manifest.js';
+// 配音清单（约 20 KB gzip）单独成包，不挡首屏；页面一打开就开始取，等用户点朗读时早已就绪
+let voiceManifest = null;
+const manifestReady = import('./voice-manifest.js')
+  .then(mod => { voiceManifest = mod.voiceManifest; })
+  .catch(error => {
+    console.warn('Voice manifest failed to load, falling back to browser speech:', error);
+    voiceManifest = {};
+  });
 
 const soundKey = 'algebra-playground:sound:v1';
 let soundEnabled = (() => {
@@ -7,6 +14,8 @@ let soundEnabled = (() => {
 })();
 
 let audio = null;
+/** 下一句的音频先下载着，一句接一句时不卡顿 */
+let upcoming = null;
 let tones = null;
 let run = 0;
 let currentLine = null;
@@ -39,7 +48,7 @@ const voiceUrl = path => `${import.meta.env.BASE_URL}voice/${path}`;
 export function clipUrlFor(who, rawText, explicitSrc) {
   if (explicitSrc) return explicitSrc;
   const key = `${who}|${String(rawText ?? '').trim()}`;
-  const hash = voiceManifest[key];
+  const hash = voiceManifest?.[key];
   return hash ? voiceUrl(`clips/${hash}.mp3`) : null;
 }
 
@@ -54,7 +63,7 @@ function synth(who, text, token) {
       const list = window.speechSynthesis.getVoices();
       const preferred = who === 'nian'
         ? list.find(v => /Yunxia/i.test(v.name))
-        : list.find(v => /Yunxi/i.test(v.name));
+        : list.find(v => /Yunxi(?!a)/i.test(v.name));
       const zh = preferred ?? list.find(v => /^zh[-_]CN/i.test(v.lang)) ?? list.find(v => /^zh/i.test(v.lang));
       if (zh) utterance.voice = zh;
       utterance.rate = preferred ? (who === 'dad' ? 0.95 : 1) : 0.98;
@@ -66,6 +75,16 @@ function synth(who, text, token) {
       resolve(false);
     }
   });
+}
+
+function preload(line) {
+  const src = line ? clipUrlFor(line.who, String(line.text ?? '').trim(), line.src) : null;
+  if (!src || typeof Audio === 'undefined') return;
+  upcoming ??= new Audio();
+  if (upcoming.dataset.src === src) return;
+  upcoming.dataset.src = src;
+  upcoming.preload = 'auto';
+  upcoming.src = src;
 }
 
 function playOne(line, token) {
@@ -114,10 +133,13 @@ export function stopSpeaking() {
 export async function say(...lines) {
   stopSpeaking();
   const token = run;
-  for (const line of lines) {
+  if (!voiceManifest) await manifestReady;
+  for (const [index, line] of lines.entries()) {
     if (token !== run) return false;
     notifySpeaking(line);
-    const ok = await playOne(line, token);
+    const playing = playOne(line, token);
+    preload(lines[index + 1]);
+    const ok = await playing;
     if (!ok || token !== run) {
       if (token === run) notifySpeaking(null);
       return false;

@@ -48,6 +48,8 @@ npm run build
 npm run smoke      # 或 npm run smoke -- <改动的 id>
 ```
 
+推送到 `main` 后，GitHub Actions 会按 `check → test → smoke → build` 再跑一遍，全部通过才部署。
+
 ---
 
 ## 地图
@@ -76,7 +78,8 @@ npm run smoke      # 或 npm run smoke -- <改动的 id>
 - `src/question-catalog.js`：小念口吻的问题标题、生活场景、难度、展馆钩子、首页轮播 `homeShowcase`、小挑战的两句固定台词。
 - `src/lab-talks.js`：每个实验 3 轮「小念问爸爸」，每轮的 `scene` 是传给实验 demo 的参数。
 - `src/algebra-story-data.js`：展馆导览 `hallChats`、17 篇代数故事 `algebraWiki`、12 组睡前问答 `algebraTalks`。
-- `src/speech.js` & `src/voice-manifest.js`、`public/voice/clips/`：离线双人语音。
+- `src/speech.js` & `src/voice-manifest.js`、`public/voice/clips/`：离线双人语音（清单单独成包、不挡首屏；播一句时预取下一句）。
+- `src/voice-lines.js`：全站要配音的台词只在这里列一次（`voiceLines()`、`wikiSpoken()`、`talkLines()`），页面朗读、`npm run voice`、`npm run check` 共用，新增会朗读的台词类型时只改这里。
 - `src/pages/`、`src/components/`、`src/lib/`：React 外壳（与 geometry-playground 同构）。
 - `src/styles/`：`base.css`（配色、按钮）、`lab.css`（画板与各实验图形、挑战、故事卡）、`app.css`（页面外壳）。页面在 `.page` 上设 `--bubble`，按钮、画板、读数都跟着展馆色走。
 - `tools/`：`check-rules.mjs`、`generate-voice.py`、`smoke.mjs`。

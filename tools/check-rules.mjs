@@ -14,7 +14,8 @@ import { labTalks } from '../src/lab-talks.js';
 import { hallChats, algebraWiki, algebraTalks } from '../src/algebra-story-data.js';
 import { labIds } from '../src/lab-modes.js';
 import { voiceManifest } from '../src/voice-manifest.js';
-import { challengeCheer, challengeHint, homeShowcase } from '../src/question-catalog.js';
+import { voiceLines } from '../src/voice-lines.js';
+import { homeShowcase } from '../src/question-catalog.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC_DIR = path.join(ROOT, 'src');
@@ -158,18 +159,7 @@ export function checkAllRules() {
     if (!t.turns || t.turns.length < 2 || !t.wrap?.trim()) errors.push(`[问答结构] "${t.title}" 至少需 2 轮对话及 wrap 总结`);
   }
 
-  const clipLines = [];
-  for (const [n, d] of Object.values(hallChats)) clipLines.push(['nian', n], ['dad', d]);
-  for (const w of algebraWiki) clipLines.push(['dad', `${w.scientist}的故事：${w.title}。${w.story} ${w.homeLab}`]);
-  for (const t of algebraTalks) {
-    for (const turn of t.turns) clipLines.push(['nian', turn.nian], ['dad', turn.dad]);
-    clipLines.push(['nian', t.wrap]);
-  }
-  for (const turns of Object.values(labTalks)) {
-    for (const turn of turns) clipLines.push(['nian', turn.nian], ['dad', turn.dad]);
-  }
-  for (const l of lessons) clipLines.push(['nian', challengeCheer(l)], ['dad', l.idea]);
-  clipLines.push(['dad', challengeHint]);
+  const clipLines = voiceLines().map(({ who, text }) => [who, text]);
 
   for (const [who, text] of clipLines) {
     const hash = voiceManifest[`${who}|${text.trim()}`];

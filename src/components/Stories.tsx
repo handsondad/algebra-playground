@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
-import { say, stopSpeaking } from "../speech.js";
+import { getSound, say, stopSpeaking } from "../speech.js";
+import { talkLines as voiceTalkLines, wikiSpoken } from "../voice-lines.js";
 import { themeOf } from "../lib/catalog";
 import { href } from "../lib/route";
 import { isLine, useSpeaking, type Line } from "../lib/speech";
@@ -17,7 +18,7 @@ export type AlgebraTalk = {
 /** 大师故事 + 家庭小实验；朗读文本和配音清单里的那句一字不差 */
 export function WikiCard({ story }: { story: WikiStory }) {
   const speaking = useSpeaking();
-  const spoken = `${story.scientist}的故事：${story.title}。${story.story} ${story.homeLab}`;
+  const spoken: string = wikiSpoken(story);
   const active = isLine(speaking, "dad", spoken);
   return (
     <article className="wiki-card" style={{ "--wiki-accent": themeOf(story.hall)?.hex ?? "#ff9f43" } as CSSProperties}>
@@ -43,18 +44,15 @@ export function WikiCard({ story }: { story: WikiStory }) {
   );
 }
 
-const talkLines = (talk: AlgebraTalk): Line[] => [
-  ...talk.turns.flatMap((turn) => [{ who: "nian" as const, text: turn.nian }, { who: "dad" as const, text: turn.dad }]),
-  { who: "nian", text: talk.wrap },
-];
+const talkLines = (talk: AlgebraTalk): Line[] => voiceTalkLines(talk);
 
-/** 一组可以展开、从头听到尾的小念问爸爸 */
+/** 一组可以展开、从头听到尾的小念问爸爸；声音关着时只展开、不朗读 */
 export function TalkCard({ talk, open, onToggle }: { talk: AlgebraTalk; open: boolean; onToggle: () => void }) {
   const speaking = useSpeaking();
   const lines = talkLines(talk);
   const toggle = () => {
     if (open) stopSpeaking();
-    else void say(...lines);
+    else if (getSound()) void say(...lines);
     onToggle();
   };
   return (
